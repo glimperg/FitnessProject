@@ -53,15 +53,16 @@ het programma op te laten lopen.
 Ten slotte is er de mogelijkheid om tijdens de workout de voortgang bij te houden.
 Na elke opdracht drukt de gebruiker op een knop om aan te geven dat hij klaar is.
 Bij opdrachten van een vaste tijdsduur loopt in plaats daarvan een timer.
-Vervolgens loopt er een timer voor een korte rustpauze, waarna de volgende opdracht begint.
+Vervolgens loopt er een timer voor een korte rustpauze,
+waarna de volgende opdracht begint.
 
 ## Visualisatie
 
-![](doc/exercises.jpg)
+![alt text](doc/exercises.jpg "Database van oefeningen")
 
-![](doc/workouts.jpg)
+![alt text](doc/workouts.jpg "Samengestelde workout")
 
-![](doc/schedule.jpg)
+![alt text](doc/schedule.jpg "Trainingsschema")
 
 
 ## Externe middelen
@@ -86,6 +87,6 @@ is echter niet aanwezig.
 ## *Minimum Viable Product*
 Het belangrijkste onderdeel van de app is het kunnen opzoeken van verschillende
 oefeningen en hun uitvoering in de database. Daarnaast bestaat het
-*Minimum Viable Product* uit het samenstellen van workouts en het maken van
-trainingsschema's. Een optionele toevoeging is de mogelijkheid om tijdens
+*Minimum Viable Product* uit het maken van trainingsschema's.
+Een optionele toevoeging is de mogelijkheid om tijdens
 een workout de voortgang van de workout bij te houden.
