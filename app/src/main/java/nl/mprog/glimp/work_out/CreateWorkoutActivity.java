@@ -3,11 +3,11 @@ package nl.mprog.glimp.work_out;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class DatabaseActivity extends AppCompatActivity {
+public class CreateWorkoutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_database);
+        setContentView(R.layout.activity_create_workout);
     }
 }

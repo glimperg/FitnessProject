@@ -13,16 +13,14 @@ Verder kan het lastig zijn om een trainingsschema te maken om bijvoorbeeld
 naar een bepaald doel toe te werken.
 
 *Work Out* probeert de gebruiker inzicht te geven in de mogelijkheden
-van een gebalanceerde workout. Verder heeft de app het doel om (beginnende)
+van een goede workout. Verder heeft de app het doel om (beginnende)
 sporters zo veel mogelijk te helpen bij het behalen van hun einddoel.
 
 ## Kenmerken
 De gebruiker kan informatie vinden over allerlei oefeningen
 en aan de hand van deze oefeningen zelf een workout samenstellen.
-Vervolgens kunnen deze persoonlijke workouts worden geplaatst in een trainingsschema
-voor een vast aantal weken.
-Bij zo'n schema kan de gebruiker een doel stellen (bv. 100 push-ups of 10 km hardlopen)
-en aan de hand van dit doel de intensiteit van de workouts geleidelijk laten oplopen.
+Vervolgens kunnen deze persoonlijke workouts worden geplaatst in een planner.
+Bij deze planner kan de gebruiker per dag een activiteit selecteren.
 Ten slotte kan de gebruiker tijdens de workout de app gebruiken om
 bij te houden hoe ver hij op dat moment met zijn workout is.
 Zo kan na het voltooien van een oefening op een knop worden gedrukt
@@ -39,16 +37,12 @@ de benodigde apparatuur, belangrijke spiergroepen en eventueel
 een afbeelding van de uitvoering.
 
 Verder is het mogelijk om met behulp van deze oefeningen
-zelf een workout samen te stellen. Hierbij wordt ook aandacht besteed
-aan de verhoudingen van getrainde spiergroepen. Zo is het bijvoorbeeld
-verstandig om een buikspieroefening aan te vullen met een oefening voor de rugspieren.
+zelf een workout samen te stellen. Hierbij wordt telkens een oefening en
+een bepaald aantal herhalingen gekozen.
 
-Daarnaast kan de gebruiker een trainingsschema aanmaken. Er wordt een bepaalde
-duur van het schema gekozen en eventueel een einddoel gekozen.
-Het schema kan vervolgens worden opgevuld met vooraf gecreëerde workouts,
-persoonlijke workouts en cardio (hardlopen, fietsen of zwemmen).
-Hierbij kan de gebruiker ervoor kiezen om per week de intensiteit van
-het programma op te laten lopen.
+Daarnaast kan de gebruiker een trainingsschema aanmaken.
+Elke dag van de week kan worden opgevuld met vooraf gecreëerde workouts,
+persoonlijke workouts en cardio (hardlopen of fietsen).
 
 Ten slotte is er de mogelijkheid om tijdens de workout de voortgang bij te houden.
 Na elke opdracht drukt de gebruiker op een knop om aan te geven dat hij klaar is.
@@ -58,23 +52,20 @@ waarna de volgende opdracht begint.
 
 ## Visualisatie
 
-![alt text](doc/exercises.jpg "Database van oefeningen")
-
-![alt text](doc/workouts.jpg "Samengestelde workout")
-
-![alt text](doc/schedule.jpg "Trainingsschema")
+![](doc/design.jpg)
 
 
 ## Externe middelen
-Bij deze app wordt gebruik gemaakt van de *wger Workout Manager* API:
-https://wger.de/api/v2. Met behulp van deze API wordt de database met oefeningen gemaakt.
+Bij deze app wordt gebruik gemaakt van Firebase authenticatie voor het kunnen
+aanmaken van accounts en een Firebase database.
+Deze database bevat alle oefeningen en hun bijbehorende informatie.
+Dit onderdeel van de database is gemaakt met behulp van de *wger Workout Manager* API:
+https://wger.de/api/v2.
+Verder bevat de database per gebruiker een lijst met de persoonlijke workouts en planner.
 
 ## Limitaties
 Er zijn een aantal technische problemen die tijdens het maken van de app kunnen verschijnen.
-Ten eerste kan het zijn dat de *wger* API niet precies werkt zoals verwacht.
-Een mogelijkheid om dit op te lossen is het vinden van een andere API
-of eventueel door zelf een database met oefeningen te maken.
-Verder is het mogelijk dat sommige onderdelen van de app verrassend moeilijk
+Het is bijvoorbeeld mogelijk dat sommige onderdelen van de app verrassend moeilijk
 zijn om te implementeren. In dit geval is het een optie om dit onderdeel aan
 te passen of wellicht helemaal te schrappen.
 

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "692691909759",
+    "firebase_url": "https://work-out-ac424.firebaseio.com",
+    "project_id": "work-out-ac424",
+    "storage_bucket": "work-out-ac424.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692691909759:android:706343bcfd75aee7",
+        "android_client_info": {
+          "package_name": "nl.mprog.glimp.work_out"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692691909759-bnacn1h6318f95rtlig50rc1b1f0ps9p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "nl.mprog.glimp.work_out",
+            "certificate_hash": "0c1cd884c8b27fe957831158c70bb3b962e6d159"
+          }
+        },
+        {
+          "client_id": "692691909759-krhj4ti3trpj0kdlroa83au7bo36vi7q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo8kjgA5xlsLrsifN1NrF8SBwJ-dzTHjI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692691909759-krhj4ti3trpj0kdlroa83au7bo36vi7q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
