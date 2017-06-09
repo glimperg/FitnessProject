@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Workout {
 
     private String name;
-    private ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+    private ArrayList<Exercise> exercises = new ArrayList<>();
 
     // constructor for Firebase
     public Workout() {}
@@ -22,5 +22,21 @@ public class Workout {
         for (JSONObject jsonObject : exerciseArrayList) {
             exercises.add(new Exercise(jsonObject));
         }
+    }
+
+    public ArrayList<Exercise> getExercises() {
+        return exercises;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void addExercise(Exercise exercise) {
+        exercises.add(exercise);
+    }
+
+    public void removeExercise(Exercise exercise) {
+        exercises.remove(exercise);
     }
 }

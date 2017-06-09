@@ -75,4 +75,49 @@ public class Exercise {
         this.sets = sets;
         this.reps = reps;
     }
+
+    public ArrayList<String> getImages() {
+        return images;
+    }
+
+    public ArrayList<String> getMuscles() {
+
+        return muscles;
+    }
+
+    public ArrayList<String> getEquipment() {
+
+        return equipment;
+    }
+
+    public String getCategory() {
+
+        return category;
+    }
+
+    public String getDescription() {
+
+        return description;
+    }
+
+    public String getName() {
+
+        return name;
+    }
+
+    public int getSets() {
+        return sets;
+    }
+
+    public void setSets(int sets) {
+        this.sets = sets;
+    }
+
+    public int getReps() {
+        return reps;
+    }
+
+    public void setReps(int reps) {
+        this.reps = reps;
+    }
 }

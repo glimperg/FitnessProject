@@ -78,6 +78,8 @@ is echter niet aanwezig.
 ## *Minimum Viable Product*
 Het belangrijkste onderdeel van de app is het kunnen opzoeken van verschillende
 oefeningen en hun uitvoering in de database. Daarnaast bestaat het
-*Minimum Viable Product* uit het maken van trainingsschema's.
-Een optionele toevoeging is de mogelijkheid om tijdens
-een workout de voortgang van de workout bij te houden.
+*Minimum Viable Product* uit het maken van workouts.
+Optionele toevoegingen zijn het maken van een weekplanner en de mogelijkheid
+om tijdens een workout de voortgang van de workout bij te houden.
+
+[![BCH compliance](https://bettercodehub.com/edge/badge/glimperg/Work-Out?branch=master)](https://bettercodehub.com/)
