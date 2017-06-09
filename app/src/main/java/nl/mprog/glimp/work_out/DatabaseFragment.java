@@ -3,7 +3,6 @@ package nl.mprog.glimp.work_out;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,26 +28,24 @@ public class DatabaseFragment extends Fragment {
 
     private static final String TAG = "DatabaseFragment";
 
-    //private ExpandableListView expandableListView;
-    //private ExpandableListAdapter expandableListAdapter;
-    //private List<String> categoriesList = new ArrayList<>();
-    //private HashMap<String, List<Exercise>> childItemsList = new HashMap<>();
-    //private DatabaseReference mDatabase;
+    private ExpandableListView expandableListView;
+    private ExpandableListAdapter expandableListAdapter;
+    private List<String> categoriesList = new ArrayList<>();
+    private HashMap<String, List<Exercise>> childItemsList = new HashMap<>();
+    private DatabaseReference mDatabase;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //mDatabase = FirebaseDatabase.getInstance().getReference().child("exercises");
-        //setAdapter();
-        // TODO: kijken of onCreate klopt
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("exercises");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.database_fragment, container, false);
-        //expandableListView = (ExpandableListView) view.findViewById(R.id.exerciseListView);
+        expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+        setAdapter();
         return view;
     }
 
@@ -57,7 +54,7 @@ public class DatabaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    /*private void setAdapter() {
+    private void setAdapter() {
 
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
@@ -81,7 +78,7 @@ public class DatabaseFragment extends Fragment {
 
                 expandableListAdapter = new CustomExpandableListAdapter(
                         getActivity(), categoriesList, childItemsList);
-                //expandableListView.setListAdapter(expandableListAdapter);
+                expandableListView.setAdapter(expandableListAdapter);
             }
 
             @Override
@@ -99,5 +96,5 @@ public class DatabaseFragment extends Fragment {
                 Log.w(TAG, "Something went wrong: ", databaseError.toException());
             }
         });
-    }*/
+    }
 }

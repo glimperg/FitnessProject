@@ -25,7 +25,34 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         this.context = context;
         this.categoriesList = categoriesList;
         this.childItemsList = childItemsList;
-        // TODO: evt. constructor aanpassen zodat je er geen HashMap in moet stoppen
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.list_group, parent, false);
+        }
+
+        // TODO: misschien werkt dit niet, moet nog testen
+        String category = (String) getGroup(groupPosition);
+        TextView categoryTextView = (TextView) convertView.findViewById(R.id.categoryTextView);
+        categoryTextView.setText(category);
+        return convertView;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.list_item, parent, false);
+        }
+
+        Exercise exercise = (Exercise) getChild(groupPosition, childPosition);
+        String exerciseName = exercise.getName();
+        TextView exerciseTextView = (TextView) convertView.findViewById(R.id.exerciseTextView);
+        exerciseTextView.setText(exerciseName);
+        return convertView;
     }
 
     @Override
@@ -50,33 +77,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         // category corresponding to child
         String category = categoriesList.get(groupPosition);
         return childItemsList.get(category).get(childPosition);
-    }
-
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_group, parent, false);
-        }
-
-        String category = (String) getGroup(groupPosition);
-        TextView categoryTextView = (TextView) convertView.findViewById(R.id.categoryTextView);
-        categoryTextView.setText(category);
-        return convertView;
-    }
-
-    @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_group, parent, false);
-        }
-
-        Exercise exercise = (Exercise) getChild(groupPosition, childPosition);
-        String exerciseName = exercise.getName();
-        TextView exerciseTextView = (TextView) convertView.findViewById(R.id.exerciseTextView);
-        exerciseTextView.setText(exerciseName);
-        return convertView;
     }
 
     @Override

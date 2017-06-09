@@ -1,4 +1,6 @@
-# Dag 1, 6-6-17
+# Week 1
+
+## Dag 2, 6-6-17
 
 * Gezocht naar een goede API met oefeningen. https://wger.de/api/v2 lijkt
 goed te zijn, maar de API is niet precies hoe ik hem wil hebben: weinig plaatjes
@@ -12,7 +14,7 @@ en soms geen goede uitleg van de oefening. Ik ga hier nog over nadenken.
 
 ![](doc/schedule.jpg)
 
-# Dag 2, 7-6-17
+## Dag 3, 7-6-17
 
 * Stand-ups gedaan samen met studiegenoten. Ze vonden de app een leuk idee
 en gaven goede feedback.
@@ -20,7 +22,7 @@ en gaven goede feedback.
 * Ik heb de API van *wger* gebruikt om een Firebase database te maken, zodat de database
 precies de structuur heeft die ik nodig heb. Veel werk en veel tekst herschreven.
 
-# Dag 3, 8-6-17
+## Dag 4, 8-6-17
 
 * Bij de stand-ups is opnieuw goede feedback gegeven. Ik had nog niet goed
 nagedacht over hoe ik precies de workouts van een gebruiker wilde opslaan.
@@ -39,3 +41,18 @@ mee te werken (zo hoef je geen rekening meer te houden met JSONExceptions).
 ![](doc/design.jpg)
 Verder nog een schema met de relaties tussen activities:
 ![](doc/design_small.jpg)
+
+## Dag 5, 9-6-17
+
+* Presentatie gehad. Het idee voor de app lijkt te veel op vergelijkbare apps.
+Er moet dus nog iets worden toegevoegd. Misschien achievements/een andere beloning
+na het voltooien van workouts. Ik ga hier dit weekend nog over nadenken.
+* Opnieuw de Firebase database aangepast. De oefeningen zijn nu in een apart
+JSONObject per categorie. Dit werkt beter, want in de app moeten de oefeningen
+ook gesorteerd op categorie.
+* CustomExpandableListAdapter gemaakt voor de DatabaseFragment. Ik heb voor een
+ExpandableListView gekozen, aangezien hierdoor elke oefening bij
+een bepaalde categorie is geplaatst.
+Dit maakt de lijst oefeningen een stuk overzichtelijker.
+* Begin gemaakt aan DatabaseFragment. Alle data wordt opgehaald uit Firebase,
+alleen er zijn nog enkele bugs aanwezig.
