@@ -1,19 +1,14 @@
 package nl.mprog.glimp.work_out;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class ExerciseActivity extends AppCompatActivity {
 
-    ImageView imageView;
     Exercise exercise;
 
     @Override
@@ -22,17 +17,29 @@ public class ExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise);
 
         exercise = (Exercise) getIntent().getSerializableExtra("exercise");
-        setTextViews();
+        setViews();
     }
 
-    private void setTextViews() {
+    private void setViews() {
 
-        imageView = (ImageView) findViewById(R.id.imageView);
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        TextView titleView = (TextView) findViewById(R.id.titleView);
+        TextView descriptionView = (TextView) findViewById(R.id.descriptionView);
+        TextView equipmentView = (TextView) findViewById(R.id.equipmentView);
+        TextView musclesView = (TextView) findViewById(R.id.musclesView);
 
         // pass image URL to AsyncTask together with ImageView
         imageView.setTag(exercise.getImages().get(0));
         new ImageAsyncTask(imageView).execute();
 
+        String description = "Description: " + exercise.getDescription();
+        String equipment = "Equipment: " + exercise.getEquipment();
+        String muscles = "Muscles: " + exercise.getMuscles();
+
+        titleView.setText(exercise.getName());
+        descriptionView.setText(description);
+        equipmentView.setText(equipment);
+        musclesView.setText(muscles);
     }
 
 

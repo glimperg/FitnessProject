@@ -56,3 +56,12 @@ een bepaalde categorie is geplaatst.
 Dit maakt de lijst oefeningen een stuk overzichtelijker.
 * Begin gemaakt aan DatabaseFragment. Alle data wordt opgehaald uit Firebase,
 alleen er zijn nog enkele bugs aanwezig.
+
+# Week 2
+
+## Dag 1, 12-6-17
+
+* Problemen bij DatabaseFragment opgelost en verder DatabaseFragment afgemaakt door een Intent en onChildClickListener toe te voegen.
+* ImageAsyncTask gemaakt om afbeeldingen op te kunnen halen. Het was lastig om de URL mee te geven aan de ImageView bij het intialiseren van een nieuwe ImageAsyncTask, maar dit is gelukt door imageView.setTag() te gebruiken.
+* ExerciseActivity gemaakt en het layout-bestand ingericht. Ik heb bij deze layout gekozen voor een ScrollView, aangezien anders de tekst van het scherm zou kunnen gaan.
+* Ik moet nog nadenken over de grootte en schaal van de afbeeldingen bij de oefeningen. Sommige afbeeldingen zijn namelijk heel breed en andere zijn vooral in de lengte groot. Ik heb nu het minimum van een vaste waarde en (een factor van) de grootte van de afbeelding gekozen, maar enkele zijn nog niet perfect.

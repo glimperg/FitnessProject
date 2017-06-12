@@ -16,8 +16,8 @@ public class Exercise implements Serializable{
     private String name;
     private String description;
     private String category;
-    private ArrayList<String> equipment;
-    private ArrayList<String> muscles;
+    private String equipment;
+    private String muscles;
     private ArrayList<String> images;
     private int sets;
     private int reps;
@@ -27,31 +27,26 @@ public class Exercise implements Serializable{
 
     public Exercise(JSONObject exercise) {
 
-        String name, description, category;
-        name = description = category = "";
+        String name, description, category, equipment, muscles;
+        name = description = category = equipment = muscles = "None";
         int sets, reps;
         sets = reps = 0;
-        ArrayList<String> equipment, muscles, images;
-        equipment = muscles = images = new ArrayList<String>();
+        ArrayList<String> images = new ArrayList<>();
 
         try {
             name = exercise.getString("name");
-            description = exercise.getString("description");
             category = exercise.getString("category");
 
+            if (exercise.has("description")) {
+                description = exercise.getString("description");
+            }
             if (exercise.has("equipment")) {
-                JSONArray array = exercise.getJSONArray("equipment");
-                for (int i = 0; i < array.length(); i++) {
-                    equipment.add(array.getString(i));
-                    // TODO: weet niet of dit werkt
-                }
+                equipment = exercise.getString("equipment");
             }
             if (exercise.has("muscles")) {
-                JSONArray array = exercise.getJSONArray("muscles");
-                for (int i = 0; i < array.length(); i++) {
-                    muscles.add(array.getString(i));
-                }
+                muscles = exercise.getString("muscles");
             }
+
             if (exercise.has("images")) {
                 JSONArray array = exercise.getJSONArray("images");
                 for (int i = 0; i < array.length(); i++) {
@@ -81,12 +76,12 @@ public class Exercise implements Serializable{
         return images;
     }
 
-    public ArrayList<String> getMuscles() {
+    public String getMuscles() {
 
         return muscles;
     }
 
-    public ArrayList<String> getEquipment() {
+    public String getEquipment() {
 
         return equipment;
     }
