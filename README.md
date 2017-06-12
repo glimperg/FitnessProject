@@ -63,11 +63,11 @@ Dit onderdeel van de database is gemaakt met behulp van de *wger Workout Manager
 https://wger.de/api/v2.
 Verder bevat de database per gebruiker een lijst met de persoonlijke workouts en planner.
 
-## Limitaties
+## Mogelijke problemen
 Er zijn een aantal technische problemen die tijdens het maken van de app kunnen verschijnen.
-Het is bijvoorbeeld mogelijk dat sommige onderdelen van de app verrassend moeilijk
-zijn om te implementeren. In dit geval is het een optie om dit onderdeel aan
-te passen of wellicht helemaal te schrappen.
+Ten eerste heb ik bij het maken van een vorige app ervaren dat de Firebase database die bij dit project wordt gebruikt, niet altijd goed werkt. Het kan bijvoorbeeld lastig zijn om data op een bepaalde manier op te halen.
+Verder lijkt het erg moeilijk om workouts te implementeren, zo dat je deze met behulp van de app kunt uitvoeren. Het scherm moet namelijk telkens wijzigen en er zijn verschillende soorten oefeningen (op basis van aantal herhalingen, of op basis van tijd).
+Ten slotte kan het zijn dat de geplande app te veel of juist te weinig werk is, maar dit is op dit moment nog lastig in te schatten.
 
 ## Vergelijkbare apps
 Een voorbeeld van een vergelijkbare app is *Workout Tracker & Gym Trainer*.

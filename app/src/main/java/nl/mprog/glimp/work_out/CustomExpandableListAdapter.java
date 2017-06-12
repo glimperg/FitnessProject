@@ -34,7 +34,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_group, parent, false);
         }
 
-        // TODO: misschien werkt dit niet, moet nog testen
         String category = (String) getGroup(groupPosition);
         TextView categoryTextView = (TextView) convertView.findViewById(R.id.categoryTextView);
         categoryTextView.setText(category);
@@ -96,6 +95,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 }

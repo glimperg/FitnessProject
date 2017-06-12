@@ -1,5 +1,6 @@
 package nl.mprog.glimp.work_out;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -46,8 +47,10 @@ public class DatabaseFragment extends Fragment {
         View view = inflater.inflate(R.layout.database_fragment, container, false);
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
         setAdapter();
+        setListener();
         return view;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -60,21 +63,18 @@ public class DatabaseFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                ArrayList<Exercise> exerciseList = new ArrayList<>();
 
-                    // list of exercises corresponding to category
-                    List<Exercise> exerciseList = new ArrayList<>();
+                for (DataSnapshot exerciseSnapshot : dataSnapshot.getChildren()) {
 
                     // add every exercise in category to ArrayList
-                    for (DataSnapshot exerciseSnapshot : dataSnapshot.getChildren()) {
-                        Exercise exercise = exerciseSnapshot.getValue(Exercise.class);
-                        exerciseList.add(exercise);
-                    }
-
-                    String category = categorySnapshot.getKey();
-                    categoriesList.add(category);
-                    childItemsList.put(category, exerciseList);
+                    Exercise exercise = exerciseSnapshot.getValue(Exercise.class);
+                    exerciseList.add(exercise);
                 }
+
+                String category = dataSnapshot.getKey();
+                categoriesList.add(category);
+                childItemsList.put(category, exerciseList);
 
                 expandableListAdapter = new CustomExpandableListAdapter(
                         getActivity(), categoriesList, childItemsList);
@@ -94,6 +94,20 @@ public class DatabaseFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
                 // getting the data failed, log a message
                 Log.w(TAG, "Something went wrong: ", databaseError.toException());
+            }
+        });
+    }
+
+    private void setListener() {
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                Exercise exercise = (Exercise) expandableListAdapter.getChild(groupPosition, childPosition);
+                Intent intent = new Intent(getActivity(), ExerciseActivity.class);
+                intent.putExtra("exercise", exercise);
+                startActivity(intent);
+                return true;
             }
         });
     }
