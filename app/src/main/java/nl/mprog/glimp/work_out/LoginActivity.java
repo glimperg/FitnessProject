@@ -15,6 +15,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+// TODO: deze activity mag weg
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
