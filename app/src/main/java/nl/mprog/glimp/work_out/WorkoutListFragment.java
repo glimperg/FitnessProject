@@ -3,6 +3,7 @@ package nl.mprog.glimp.work_out;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -85,12 +86,5 @@ public class WorkoutListFragment extends Fragment {
             }
         });
     }
-
-    public void newWorkout(View view) {
-
-        Intent intent = new Intent(getActivity(), CreateWorkoutActivity.class);
-        startActivity(intent);
-    }
-
 
 }

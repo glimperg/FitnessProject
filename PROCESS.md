@@ -69,3 +69,5 @@ alleen er zijn nog enkele bugs aanwezig.
 ## Dag 2, 13-6-17
 
 * Bij de stand-ups de voortgang van de vorige dag besproken. Julia kwam met een goed idee over het uniek maken van de app: namelijk het toevoegen van sjablonen voor workouts, die de gebruiker kunnen helpen bij het maken van een goede workout. Hierdoor wordt voorkomen dat de gebruiker niet enkel dezelfde spiergroep traint, want dit is niet goed.
+* De LoginActivity en Firebase login is weggehaald. In plaats daarvan werk ik nu met 'anonymous authentication'. Hierdoor kan je nog steeds workouts plaatsen in een aparte branch corresponderend met de gebruiker, zonder te hoeven inloggen. Het nadeel hiervan is dat er een nieuwe gebruiker wordt aangemaakt als de app opnieuw wordt geïnstalleerd, waardoor alle data in feite verloren gaat. Dit is bij normaal gebruik geen groot probleem, maar wel vervelend met testen.
+* Begonnen met het implementeren van de workouts. Speciale WorkoutListAdapter gemaakt om de Workouts in te plaatsen. De data wordt nu correct uit Firebase gehaald, maar wordt nog niet geüpdatet wanneer er een workout wordt verwijderd, aangezien deze functies nog niet zijn gemaakt.
