@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private FirebaseAuth mAuth;
+    private TabLayout tabLayout;
 
     FirebaseUser user;
     // TODO: user hoeft wss niet global. kijken of onStart belangrijk is
@@ -54,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         setViewPager(mViewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        setListener();
 
     }
 
@@ -80,12 +82,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setViewPager(ViewPager viewPager){
+
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new DatabaseFragment(), "Exercises");
         adapter.addFragment(new WorkoutListFragment(), "Workouts");
         adapter.addFragment(new PlannerFragment(), "Planner");
 
         viewPager.setAdapter(adapter);
+    }
+
+    public void setListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                // TODO: regelen dat de fab verdwijnt als je de workouts tab verlaat (en weer verschijnt)
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     public void newWorkout(View view) {

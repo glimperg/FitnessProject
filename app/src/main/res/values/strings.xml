@@ -14,4 +14,9 @@
     <string name="muscles">Muscles: ...</string>
     <string name="workout_image_button_content_desc">This button enables users to add a new workout.</string>
     <string name="title_activity_test">test</string>
+    <string name="name">Name:</string>
+    <string name="workout_title">Workout title</string>
+    <string name="use_template">Use template:</string>
+    <string name="length">Length:</string>
+    <string name="enter_number">Enter number (1-10)</string>
 </resources>

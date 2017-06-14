@@ -43,7 +43,8 @@ public class DatabaseFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.database_fragment, container, false);
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
         setAdapter();
@@ -101,9 +102,11 @@ public class DatabaseFragment extends Fragment {
     private void setListener() {
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+            public boolean onChildClick(ExpandableListView parent,
+                                        View v, int groupPosition, int childPosition, long id) {
 
-                Exercise exercise = (Exercise) expandableListAdapter.getChild(groupPosition, childPosition);
+                Exercise exercise = (Exercise)
+                        expandableListAdapter.getChild(groupPosition, childPosition);
                 Intent intent = new Intent(getActivity(), ExerciseActivity.class);
                 intent.putExtra("exercise", exercise);
                 startActivity(intent);

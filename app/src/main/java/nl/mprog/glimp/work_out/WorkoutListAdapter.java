@@ -30,7 +30,8 @@ public class WorkoutListAdapter extends ArrayAdapter<Workout> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
         if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater)
+                    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_group, parent, false);
         }
 

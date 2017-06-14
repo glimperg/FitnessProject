@@ -1,15 +1,16 @@
 package nl.mprog.glimp.work_out;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -29,25 +30,29 @@ public class WorkoutListFragment extends Fragment {
 
     private ListView listView;
     private WorkoutListAdapter listAdapter;
+    private String template;
     private ArrayList<Workout> workoutList = new ArrayList<>();
     private DatabaseReference mDatabase;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.workout_list_fragment, container, false);
-
-        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // get reference to Firebase database containing Workouts
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
-
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
         listView = (ListView) view.findViewById(R.id.workoutListView);
+
         setAdapter();
 
         return view;
     }
 
+    /**
+     *
+     */
     public void setAdapter() {
 
         mDatabase.addChildEventListener(new ChildEventListener() {
