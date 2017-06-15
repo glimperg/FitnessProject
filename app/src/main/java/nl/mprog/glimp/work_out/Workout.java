@@ -16,12 +16,9 @@ public class Workout {
     // constructor for Firebase
     public Workout() {}
 
-    public Workout(String name, ArrayList<JSONObject> exerciseArrayList) {
+    public Workout(String name, ArrayList<Exercise> exercises) {
         this.name = name;
-
-        for (JSONObject jsonObject : exerciseArrayList) {
-            exercises.add(new Exercise(jsonObject));
-        }
+        this.exercises = exercises;
     }
 
     public ArrayList<Exercise> getExercises() {
