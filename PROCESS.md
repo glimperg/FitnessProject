@@ -76,3 +76,10 @@ alleen er zijn nog enkele bugs aanwezig.
 
 * Layout van CreateWorkoutActivity ingericht. Er kan een titel worden gekozen, een lengte van de workout en eventueel een template. Voor dit laatste deel is er voor een 'spinner'/dropdown menu gekozen.
 * CreateWorkoutActivity voor het grootste deel gemaakt. Ik probeer het creëren van workouts af te krijgen voor de alpha-versie.
+
+## Dag 4, 15-6-17
+
+* App bar toegevoegd bij specifieke activities en bij andere de standaard titelbar weggehaald. Dit neemt namelijk veel ruimte op en is onnodig.
+* Layout van CreateWorkoutActivity aangepast. In plaats van een vaste lengte te kiezen, wordt er nu op een FloatingActionButton gedrukt om een exercise aan de workout toe te kunnen voegen. Dit lijkt me mooier en ook flexibeler. Wel kan het nu lastiger worden om de templates voor workouts te implementeren.
+* Style van de app aangepast van blauw (standaard) naar een donker thema.
+* Het lukt nu om workouts te creëren, maar om de een of andere reden lukt het nog niet om de workouts in Firebase op te slaan. Hier ga ik later nog naar kijken.

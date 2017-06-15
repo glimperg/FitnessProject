@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+// TODO: FrameLayout (evt) toevoegen met een wit vlak voor onder de afbeeldingen
 public class ExerciseActivity extends AppCompatActivity {
 
     Exercise exercise;
