@@ -1,5 +1,6 @@
 package nl.mprog.glimp.work_out;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
  * Created by Gido Limperg on 8-6-2017.
  */
 
+// TODO: textview voor als je geen workouts hebt
+
 public class WorkoutListFragment extends Fragment {
     private static final String TAG = "WorkoutListFragment";
 
@@ -42,10 +45,12 @@ public class WorkoutListFragment extends Fragment {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // get reference to Firebase database containing Workouts
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("workouts");
         listView = (ListView) view.findViewById(R.id.workoutListView);
 
         setAdapter();
+        setOnItemClickListener();
+        setOnItemLongClickListener();
 
         return view;
     }
@@ -59,11 +64,8 @@ public class WorkoutListFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                for (DataSnapshot workoutSnapshot : dataSnapshot.getChildren()) {
-
-                    Workout workout = workoutSnapshot.getValue(Workout.class);
-                    workoutList.add(workout);
-                }
+                Workout workout = dataSnapshot.getValue(Workout.class);
+                workoutList.add(workout);
 
                 listAdapter = new WorkoutListAdapter(getActivity(), workoutList);
                 listView.setAdapter(listAdapter);
@@ -80,14 +82,43 @@ public class WorkoutListFragment extends Fragment {
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // getting the data failed, log a message
                 Log.w(TAG, "Something went wrong: ", databaseError.toException());
+            }
+        });
+    }
+
+    public void setOnItemClickListener() {
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Workout workout = listAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), WorkoutActivity.class);
+                intent.putExtra("workout", workout);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void setOnItemLongClickListener() {
+
+        // TODO: kijken of je het niet beter op een andere manier kan verwijderen (in WorkoutActivity?)
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Workout workout = listAdapter.getItem(position);
+                workoutList.remove(workout);
+                listAdapter.notifyDataSetChanged();
+                mDatabase.child(workout.getName()).removeValue();
+                return true;
             }
         });
     }

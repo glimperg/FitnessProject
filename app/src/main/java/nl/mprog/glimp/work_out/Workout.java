@@ -2,13 +2,14 @@ package nl.mprog.glimp.work_out;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
  */
 
-public class Workout {
+public class Workout implements Serializable {
 
     private String name;
     private ArrayList<Exercise> exercises = new ArrayList<>();

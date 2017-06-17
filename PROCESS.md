@@ -61,6 +61,7 @@ alleen er zijn nog enkele bugs aanwezig.
 
 ## Dag 1, 12-6-17
 
+* Nagedacht over de feedback van de presentaties. Ik wil een extra tabblad met een profielpagina aanmaken. Hier komt het aantal voltooide workouts te staan (en misschien nog meer) en kun je het kleurenthema van de app veranderen (evt. na een bepaald aantal voltooide workouts).
 * Problemen bij DatabaseFragment opgelost en verder DatabaseFragment afgemaakt door een Intent en onChildClickListener toe te voegen.
 * ImageAsyncTask gemaakt om afbeeldingen op te kunnen halen. Het was lastig om de URL mee te geven aan de ImageView bij het intialiseren van een nieuwe ImageAsyncTask, maar dit is gelukt door imageView.setTag() te gebruiken.
 * ExerciseActivity gemaakt en het layout-bestand ingericht. Ik heb bij deze layout gekozen voor een ScrollView, aangezien anders de tekst van het scherm zou kunnen gaan.
@@ -83,3 +84,12 @@ alleen er zijn nog enkele bugs aanwezig.
 * Layout van CreateWorkoutActivity aangepast. In plaats van een vaste lengte te kiezen, wordt er nu op een FloatingActionButton gedrukt om een exercise aan de workout toe te kunnen voegen. Dit lijkt me mooier en ook flexibeler. Wel kan het nu lastiger worden om de templates voor workouts te implementeren.
 * Style van de app aangepast van blauw (standaard) naar een donker thema.
 * Het lukt nu om workouts te creëren, maar om de een of andere reden lukt het nog niet om de workouts in Firebase op te slaan. Hier ga ik later nog naar kijken.
+
+## Dag 5, 17-6-17 (en weekend)
+
+* Presentatie gehad. Jaap vond het idee van de templates niet slecht, maar hij had een betere oplossing: in plaats van de keuze van de oefening tot een bepaalde spiergroep te beperken, verschijnt er een vooraf gecreëerde workout, die vervolgens aan te passen is.
+Verder vond hij het idee met de kleurenthema's die je kunt ontgrendelen niet heel relevant. Ik ga hier nog over nadenken. Ten slotte ga ik bij elke oefening in de ListViews van sommige Activities een plaatje met de getrainde spiergroep toevoegen.
+* Regels in Firebase veranderd, nu lukt het wel om de workouts op te slaan.
+* WorkoutListFragment afgemaakt. De workouts zijn nu voor het grootste deel werkend.
+Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude workout overschreven. Hier ga ik later naar kijken.
+* WorkoutActivity en de layout van deze Activity gemaakt.

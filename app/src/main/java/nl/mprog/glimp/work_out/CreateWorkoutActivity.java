@@ -15,14 +15,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-// TODO: app bar/action bar toevoegen
 
 public class CreateWorkoutActivity extends AppCompatActivity {
 
@@ -50,10 +51,6 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
         setSupportActionBar(toolbar);
 
-        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(user_id).setValue("test");
-
         //setTemplateListener();
         setListener();
     }
@@ -66,6 +63,8 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
             Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
             startActivity(intent);
+
+            Toast.makeText(CreateWorkoutActivity.this, "Saved workout", Toast.LENGTH_SHORT).show();
             // TODO: moet naar WorkoutListFragment gaan
             return true;
         } else {
@@ -154,6 +153,8 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
     public void saveWorkout() {
 
+        // TODO: ervoor zorgen dat workouts niet worden overschreven
+
         EditText workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
         String title = workoutEditText.getText().toString();
         Workout workout = new Workout(title, exerciseList);
@@ -163,7 +164,17 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         // get reference to Firebase database containing Driver objects
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("users").child(user_id).child("workouts").child(title).setValue(workout);
+        mDatabase.child("users").child(user_id).child("workouts").child(title)
+                .setValue(workout, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    System.out.println("Data could not be saved " + databaseError.getMessage());
+                } else {
+                    System.out.println("Data saved successfully.");
+                }
+            }
+        });
     }
 
 }
