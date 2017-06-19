@@ -42,8 +42,10 @@ public class EditPlannerActivity extends AppCompatActivity {
         Workout[] plannerWorkouts = (Workout[]) getIntent().getSerializableExtra("planner");
         plannerArrayList = new ArrayList<>(Arrays.asList(plannerWorkouts));
 
-        // add rest day to list of Workouts
+        // add non-workout options to list of Workouts
         workoutList.add(new Workout("Rest day", null));
+        workoutList.add(new Workout("Cycling", null));
+        workoutList.add(new Workout("Running", null));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.editPlannerToolbar);
         setSupportActionBar(toolbar);
@@ -136,6 +138,7 @@ public class EditPlannerActivity extends AppCompatActivity {
                         editPlannerAdapter.notifyDataSetChanged();
                     }
                 });
+                builder.show();
             }
         });
     }

@@ -21,7 +21,6 @@
         <activity android:name=".WorkoutActivity" />
         <activity android:name=".CreateWorkoutActivity" />
         <activity android:name=".ChooseExerciseActivity" />
-        <activity android:name=".WorkingOutActivity" />
         <activity android:name=".EditPlannerActivity" />
         <activity android:name=".ExerciseActivity" />
         <activity android:name=".ChooseWorkoutActivity" />

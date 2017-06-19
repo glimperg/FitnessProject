@@ -5,11 +5,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -20,8 +28,9 @@ import java.util.ArrayList;
 public class PlannerFragment extends Fragment {
 
     private static final String TAG = "PlannerFragment";
+    private static final int daysOfWeek = 7;
 
-    private ArrayList<Workout> plannerArrayList = new ArrayList<>();
+    private ArrayList<Workout> plannerArrayList = new ArrayList<>(daysOfWeek);
     private ListView plannerListView;
     private PlannerAdapter plannerAdapter;
     private FloatingActionButton floatingActionButton;
@@ -34,19 +43,49 @@ public class PlannerFragment extends Fragment {
         plannerListView = (ListView) view.findViewById(R.id.plannerListView);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.plannerActionButton);
 
+//        for (int i = 0; i < daysOfWeek; i++) {
+//            plannerArrayList.add(new Workout("Rest day", null));
+//        }
+
         setAdapter();
         setListener();
         setButtonListener();
 
         return view;
-
     }
 
     public void setAdapter() {
 
-        plannerAdapter = new PlannerAdapter(getActivity(), plannerArrayList);
-        plannerListView.setAdapter(plannerAdapter);
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(userId).child("planner");
+
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Workout workout = dataSnapshot.getValue(Workout.class);
+                plannerArrayList.add(workout);
+
+                plannerAdapter = new PlannerAdapter(getActivity(), plannerArrayList);
+                plannerListView.setAdapter(plannerAdapter);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // getting the data failed, log a message
+                Log.w(TAG, "Something went wrong: ", databaseError.toException());
+            }
+        });
     }
 
     public void setListener() {
@@ -56,7 +95,7 @@ public class PlannerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Workout workout = plannerAdapter.getItem(position);
-                if (workout.getExercises() == null) {
+                if (workout.getExercises().size() > 0) {
 
                     Intent intent = new Intent(getActivity(), WorkoutActivity.class);
                     intent.putExtra("workout", workout);
@@ -65,6 +104,10 @@ public class PlannerFragment extends Fragment {
             }
         });
     }
+
+    // TODO: hoe maak ik de eerste keer een planner (of hoeft dat alleen in EditPlannerActivity)
+    // TODO: de checkboxes moeten iets doen
+    // TODO: kijken wat er gebeurt als je een workout verwijdert die in de planner staat
 
     public void setButtonListener() {
 
