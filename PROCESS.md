@@ -93,3 +93,12 @@ Verder vond hij het idee met de kleurenthema's die je kunt ontgrendelen niet hee
 * WorkoutListFragment afgemaakt. De workouts zijn nu voor het grootste deel werkend.
 Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude workout overschreven. Hier ga ik later naar kijken.
 * WorkoutActivity en de layout van deze Activity gemaakt.
+
+# Week 3
+
+## Dag 1, 19-6-17
+
+* Hard gewerkt aan het implementeren van de planner. De planner is gedeeltelijk functioneel. Een van de problemen is het feit dat er op een bepaald moment een lege planner moet worden aangemaakt, maar dit is mij nog niet gelukt. Verder zijn de checkboxes nog niet functioneel, en moet ik nog nadenken over de manier waarop ik deze checkboxes ga implementeren.
+* PlannerAdapter voor de PlannerFragment gemaakt.
+* PlannerFragment en EditPlannerActivity gemaakt. In EditPlannerActivity heb ik ervoor gekozen om workouts te kiezen met behulp van een AlertDialog. Dit zorgt ervoor dat er niet naar een aparte activity gegaan hoeft te worden, wat sneller en makkelijker is.
+* Layouts voor de betreffende activities in elkaar gezet. Verder ook wat kleine aanpassingen aan andere layouts (Toolbars toegevoegd, marges aangepast).
