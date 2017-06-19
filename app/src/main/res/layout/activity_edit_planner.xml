@@ -4,26 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="nl.mprog.glimp.work_out.ChooseExerciseActivity">
+    tools:context="nl.mprog.glimp.work_out.EditPlannerActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/chooseExerciseToolbar"
+        android:id="@+id/editPlannerToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimaryDark"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:title="@string/choose_an_exercise"
+        app:title="@string/edit_planner"
         app:titleTextColor="@color/white"/>
 
-    <ExpandableListView
+    <ListView
+        android:id="@+id/editPlannerListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/chooseExerciseListView"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-        android:clickable="true">
-    </ExpandableListView>
+        android:layout_marginBottom="10dp">
+    </ListView>
 
 </RelativeLayout>

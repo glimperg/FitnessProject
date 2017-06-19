@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
@@ -38,6 +41,9 @@ public class ChooseExerciseActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("exercises");
         exerciseListView = (ExpandableListView) findViewById(R.id.chooseExerciseListView);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.chooseExerciseToolbar);
+        setSupportActionBar(toolbar);
 
         setAdapter();
         setListener();

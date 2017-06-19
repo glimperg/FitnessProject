@@ -21,4 +21,7 @@
     <string name="enter_number">Enter number (1-10)</string>
     <string name="action_complete">Complete action</string>
     <string name="create_new_workout">Create new workout</string>
+    <string name="mon">Mon</string>
+    <string name="edit_planner">Edit planner</string>
+    <string name="choose_an_exercise">Choose an exercise</string>
 </resources>

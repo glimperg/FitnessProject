@@ -154,17 +154,18 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     public void saveWorkout() {
 
         // TODO: ervoor zorgen dat workouts niet worden overschreven
+        // TODO: niet saven als je geen exercises hebt toegevoegd
 
         EditText workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
         String title = workoutEditText.getText().toString();
         Workout workout = new Workout(title, exerciseList);
 
-        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // get reference to Firebase database containing Driver objects
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("users").child(user_id).child("workouts").child(title)
+        mDatabase.child("users").child(userId).child("workouts").child(title)
                 .setValue(workout, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
