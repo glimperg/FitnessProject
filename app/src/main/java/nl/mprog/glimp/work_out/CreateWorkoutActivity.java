@@ -36,6 +36,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
     private Spinner templateSpinner;
     private String template;
+    private EditText workoutEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,9 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         exerciseListAdapter = new ExerciseListAdapter(CreateWorkoutActivity.this, exerciseList);
         exerciseListView.setAdapter(exerciseListAdapter);
 
-        templateSpinner = setSpinner(R.id.templateSpinner, R.array.template_array);
+        workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
+
+        setSpinner();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
         setSupportActionBar(toolbar);
@@ -59,14 +62,30 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.actionComplete) {
-            saveWorkout();
 
-            Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
-            startActivity(intent);
+            String workoutTitle = workoutEditText.getText().toString();
 
-            Toast.makeText(CreateWorkoutActivity.this, "Saved workout", Toast.LENGTH_SHORT).show();
-            // TODO: moet naar WorkoutListFragment gaan
-            return true;
+            if (exerciseList.size() > 0 && !workoutTitle.isEmpty()) {
+                saveWorkout();
+
+                Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
+                startActivity(intent);
+
+                Toast.makeText(CreateWorkoutActivity.this, "Saved workout",
+                        Toast.LENGTH_SHORT).show();
+                // TODO: moet naar WorkoutListFragment gaan
+                return true;
+
+            } else if (exerciseList.size() == 0) {
+                Toast.makeText(CreateWorkoutActivity.this, "Please select at least one exercise",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+
+            } else {
+                Toast.makeText(CreateWorkoutActivity.this, "Please input a title",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -94,18 +113,16 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         }
     }
 
-    private Spinner setSpinner(int spinnerId, int arrayId) {
+    private void setSpinner() {
 
-        Spinner spinner = (Spinner) findViewById(spinnerId);
+        templateSpinner = (Spinner) findViewById(R.id.templateSpinner);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(CreateWorkoutActivity.this,
-                arrayId, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                CreateWorkoutActivity.this, R.array.template_array, android.R.layout.simple_spinner_item);
 
         // specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        return spinner;
+        templateSpinner.setAdapter(adapter);
     }
 
     public void setTemplateListener() {
@@ -154,18 +171,17 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     public void saveWorkout() {
 
         // TODO: ervoor zorgen dat workouts niet worden overschreven
-        // TODO: niet saven als je geen exercises hebt toegevoegd
 
-        EditText workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
-        String title = workoutEditText.getText().toString();
-        Workout workout = new Workout(title, exerciseList);
+        String workoutTitle = workoutEditText.getText().toString();
+
+        Workout workout = new Workout(workoutTitle, exerciseList);
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // get reference to Firebase database containing Driver objects
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("users").child(userId).child("workouts").child(title)
+        mDatabase.child("users").child(userId).child("workouts").child(workoutTitle)
                 .setValue(workout, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

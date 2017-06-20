@@ -102,3 +102,10 @@ Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude work
 * PlannerAdapter voor de PlannerFragment gemaakt.
 * PlannerFragment en EditPlannerActivity gemaakt. In EditPlannerActivity heb ik ervoor gekozen om workouts te kiezen met behulp van een AlertDialog. Dit zorgt ervoor dat er niet naar een aparte activity gegaan hoeft te worden, wat sneller en makkelijker is.
 * Layouts voor de betreffende activities in elkaar gezet. Verder ook wat kleine aanpassingen aan andere layouts (Toolbars toegevoegd, marges aangepast).
+
+## Dag 2, 20-6-17
+
+* Templates in Firebase gezet. Dit zijn workouts van een bepaalde lengte, welke kunnen worden gekozen bij het aanmaken van een nieuwe workout.
+* Veel gewerkt aan bugfixes:
+  * Het is gelukt om een lege planner aan te maken bij het aanmaken van een nieuw account. Wel is er nog een andere bug waardoor nieuwe gebruikers geen planner aan kunnen maken.
+  * Er kan nu geen workout met een lege titel of zonder oefeningen worden aangemaakt.

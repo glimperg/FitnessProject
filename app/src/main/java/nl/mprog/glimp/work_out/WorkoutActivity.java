@@ -27,6 +27,8 @@ public class WorkoutActivity extends AppCompatActivity {
         toolbar.setTitle(workout.getName());
         setSupportActionBar(toolbar);
 
+        // TODO: aangeven welke equipment je nodig hebt
+
         exerciseListView = (ListView) findViewById(R.id.exerciseWorkoutListView);
         ExerciseListAdapter exerciseListAdapter = new ExerciseListAdapter(this, exerciseList);
         exerciseListView.setAdapter(exerciseListAdapter);

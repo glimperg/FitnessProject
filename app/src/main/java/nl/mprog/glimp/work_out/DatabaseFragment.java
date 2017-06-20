@@ -52,6 +52,13 @@ public class DatabaseFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        categoriesList = new ArrayList<>();
+        childItemsList = new HashMap<>();
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

@@ -43,15 +43,57 @@ public class PlannerFragment extends Fragment {
         plannerListView = (ListView) view.findViewById(R.id.plannerListView);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.plannerActionButton);
 
-//        for (int i = 0; i < daysOfWeek; i++) {
-//            plannerArrayList.add(new Workout("Rest day", null));
-//        }
-
+        setPlanner();
         setAdapter();
         setListener();
         setButtonListener();
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        plannerArrayList = new ArrayList<>(daysOfWeek);
+    }
+
+    public void setPlanner() {
+
+        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        final DatabaseReference mDatabase = FirebaseDatabase
+                .getInstance().getReference().child("users");
+
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (!dataSnapshot.child(userId).child("planner").hasChildren()) {
+
+                    // add default values to planner
+                    ArrayList<Workout> defaultPlanner = new ArrayList<>(daysOfWeek);
+                    for (int i = 0; i < daysOfWeek; i++) {
+                        defaultPlanner.add(new Workout("Rest day", null));
+                    }
+                    mDatabase.child(userId).child("planner").setValue(defaultPlanner);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // getting the data failed, log a message
+                Log.w(TAG, "Something went wrong: ", databaseError.toException());
+            }
+        });
     }
 
     public void setAdapter() {
