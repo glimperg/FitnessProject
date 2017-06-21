@@ -12,6 +12,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+// TODO: ergens plaatjes toevoegen in ListView die de categorie aangeven
+
 public class WorkoutActivity extends AppCompatActivity {
 
     ListView exerciseListView;
@@ -28,8 +30,6 @@ public class WorkoutActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.workoutToolbar);
         toolbar.setTitle(workout.getName());
         setSupportActionBar(toolbar);
-
-        // TODO: aangeven welke equipment je nodig hebt
 
         exerciseListView = (ListView) findViewById(R.id.exerciseWorkoutListView);
         ExerciseListAdapter exerciseListAdapter = new ExerciseListAdapter(this, exerciseList);

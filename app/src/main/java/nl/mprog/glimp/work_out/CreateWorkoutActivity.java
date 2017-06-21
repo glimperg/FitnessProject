@@ -1,6 +1,7 @@
 package nl.mprog.glimp.work_out;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -54,7 +57,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
         setSupportActionBar(toolbar);
 
-        //setTemplateListener();
+        setTemplateListener();
         setListener();
     }
 
@@ -70,7 +73,6 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
                 startActivity(intent);
-
                 Toast.makeText(CreateWorkoutActivity.this, "Saved workout",
                         Toast.LENGTH_SHORT).show();
                 // TODO: moet naar WorkoutListFragment gaan
@@ -93,6 +95,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_complete, menu);
         return true;
@@ -135,11 +138,47 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 // get selected item
                 template = parent.getItemAtPosition(position).toString();
 
+                getTemplate();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 template = "None";
+            }
+        });
+    }
+
+    public void getTemplate() {
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("templates");
+        mDatabase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG, "key: " + dataSnapshot.getKey());
+                if (dataSnapshot.getKey().equals(template)) {
+                    Workout templateWorkout = dataSnapshot.getValue(Workout.class);
+                    exerciseList = templateWorkout.getExercises();
+                    for (Exercise exercise: exerciseList) {
+                        Log.d(TAG, "test: "+ exercise.getName());
+                    }
+                    exerciseListAdapter.notifyDataSetChanged();
+                    // TODO: exercises worden niet weergegeven in listview
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // getting the data failed, log a message
+                Log.w(TAG, "Something went wrong: ", databaseError.toException());
             }
         });
     }

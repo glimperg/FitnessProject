@@ -28,9 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TabLayout tabLayout;
 
-    // TODO: kijken of onStart belangrijk is
-    // TODO: bug bij plannertab fixen
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
