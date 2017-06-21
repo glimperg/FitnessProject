@@ -109,3 +109,9 @@ Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude work
 * Veel gewerkt aan bugfixes:
   * Het is gelukt om een lege planner aan te maken bij het aanmaken van een nieuw account. Wel is er nog een andere bug waardoor nieuwe gebruikers geen planner aan kunnen maken.
   * Er kan nu geen workout met een lege titel of zonder oefeningen worden aangemaakt.
+
+## Dag 3, 21-6-17
+
+* Bug opgelost waarbij nieuwe accounts geen planner aan konden maken (opgelost door de regels van Firebase te veranderen).
+* In de WorkoutActivity kun je nu zien wat de benodigheden bij een bepaalde workout zijn. Dit zorgt ervoor dat je niet apart op elke oefening hoeft te klikken om de benodigheden te kunnen zien.
+* Begonnen aan het invoegen van de templates. Helaas lukt het nog niet om de oefeningen na het binnenhalen in de ListView te zetten.
