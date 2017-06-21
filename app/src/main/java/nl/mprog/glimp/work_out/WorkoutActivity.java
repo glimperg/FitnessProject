@@ -7,8 +7,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -33,7 +35,37 @@ public class WorkoutActivity extends AppCompatActivity {
         ExerciseListAdapter exerciseListAdapter = new ExerciseListAdapter(this, exerciseList);
         exerciseListView.setAdapter(exerciseListAdapter);
 
+        String equipment = getEquipment();
+        // remove last comma and space
+        equipment = equipment.substring(0,equipment.length() - 2);
+        String equipmentString = "Equipment: " + equipment;
+        TextView equipmentView = (TextView) findViewById(R.id.equipmentTextView);
+        equipmentView.setText(equipmentString);
+
         setListener();
+    }
+
+    private String getEquipment() {
+
+        ArrayList<String> equipmentList = new ArrayList<>();
+
+        for (Exercise exercise : exerciseList) {
+            String exerciseEquipment = exercise.getEquipment();
+            ArrayList<String> exerciseEquipmentList = new ArrayList<>(Arrays.asList(exerciseEquipment.split(", ")));
+
+            for (String equipment : exerciseEquipmentList) {
+                if (!equipmentList.contains(equipment)) {
+                    equipmentList.add(equipment);
+                }
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String string : equipmentList) {
+            String stringComma = string + ", ";
+            stringBuilder.append(stringComma);
+        }
+        return stringBuilder.toString();
     }
 
     public void setListener() {

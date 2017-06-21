@@ -147,7 +147,6 @@ public class PlannerFragment extends Fragment {
         });
     }
 
-    // TODO: hoe maak ik de eerste keer een planner (of hoeft dat alleen in EditPlannerActivity)
     // TODO: de checkboxes moeten iets doen
     // TODO: kijken wat er gebeurt als je een workout verwijdert die in de planner staat
 

@@ -16,13 +16,27 @@
         app:title="@string/placeholder"
         app:titleTextColor="@color/white"/>
 
+    <TextView
+        android:id="@+id/equipmentTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/placeholder"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="10dp"
+        android:textSize="20sp"
+        android:background="@android:color/background_dark"/>
+
     <ListView
         android:id="@+id/exerciseWorkoutListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/workoutToolbar"
         android:layout_marginTop="1dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="1dp"
+        android:layout_above="@id/equipmentTextView">
     </ListView>
 
 </RelativeLayout>
