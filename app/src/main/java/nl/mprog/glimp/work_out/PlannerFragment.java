@@ -30,7 +30,7 @@ public class PlannerFragment extends Fragment {
     private static final String TAG = "PlannerFragment";
     private static final int daysOfWeek = 7;
 
-    private ArrayList<Workout> plannerArrayList = new ArrayList<>(daysOfWeek);
+    private ArrayList<Workout> plannerArrayList;
     private ListView plannerListView;
     private PlannerAdapter plannerAdapter;
     private FloatingActionButton floatingActionButton;
@@ -41,6 +41,7 @@ public class PlannerFragment extends Fragment {
         View view = inflater.inflate(R.layout.planner_fragment, container, false);
 
         plannerListView = (ListView) view.findViewById(R.id.plannerListView);
+        plannerArrayList = new ArrayList<>(daysOfWeek);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.plannerActionButton);
 
         setPlanner();
@@ -49,13 +50,6 @@ public class PlannerFragment extends Fragment {
         setButtonListener();
 
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        plannerArrayList = new ArrayList<>(daysOfWeek);
     }
 
     public void setPlanner() {
@@ -68,7 +62,8 @@ public class PlannerFragment extends Fragment {
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (!dataSnapshot.child(userId).child("planner").hasChildren()) {
+
+                if (dataSnapshot.child(userId).child("planner").getChildrenCount() > 0) {
 
                     // add default values to planner
                     ArrayList<Workout> defaultPlanner = new ArrayList<>(daysOfWeek);

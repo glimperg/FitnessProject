@@ -42,5 +42,4 @@ public class ExerciseListAdapter extends ArrayAdapter<Exercise> {
 
         return convertView;
     }
-
 }

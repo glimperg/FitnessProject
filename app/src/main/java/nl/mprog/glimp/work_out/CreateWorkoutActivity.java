@@ -154,15 +154,12 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "key: " + dataSnapshot.getKey());
+
                 if (dataSnapshot.getKey().equals(template)) {
                     Workout templateWorkout = dataSnapshot.getValue(Workout.class);
-                    exerciseList = templateWorkout.getExercises();
-                    for (Exercise exercise: exerciseList) {
-                        Log.d(TAG, "test: "+ exercise.getName());
-                    }
+                    exerciseList.clear();
+                    exerciseList.addAll(templateWorkout.getExercises());
                     exerciseListAdapter.notifyDataSetChanged();
-                    // TODO: exercises worden niet weergegeven in listview
                 }
             }
 
@@ -212,9 +209,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         // TODO: ervoor zorgen dat workouts niet worden overschreven
 
         String workoutTitle = workoutEditText.getText().toString();
-
         Workout workout = new Workout(workoutTitle, exerciseList);
-
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // get reference to Firebase database containing Driver objects
