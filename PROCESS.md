@@ -115,3 +115,10 @@ Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude work
 * Bug opgelost waarbij nieuwe accounts geen planner aan konden maken (opgelost door de regels van Firebase te veranderen).
 * In de WorkoutActivity kun je nu zien wat de benodigheden bij een bepaalde workout zijn. Dit zorgt ervoor dat je niet apart op elke oefening hoeft te klikken om de benodigheden te kunnen zien.
 * Begonnen aan het invoegen van de templates. Helaas lukt het nog niet om de oefeningen na het binnenhalen in de ListView te zetten.
+
+## Dag 4, 22-6-17
+
+* De bugs met de templates zijn opgelost, alsmede een nieuwe bug bij de planner waardoor telkens de oude planner werd overschreven door een lege planner.
+* SeekBar toegevoegd in CreateWorkoutActivity. Dit is een slider waarmee je de lengte van de templates kunt opgeven (van 1 tot 10), waarna de template wordt aangepast aan deze lengte.
+* De templates zijn nu volledig functioneel. Er is echter één inefficiënte oplossing bij de SeekBar. Er geldt namelijk dat de templates elke keer dat de lengte van de SeekBar wordt aangepast, opnieuw worden opgehaald uit Firebase. Het zou beter zijn om de behaalde template op te slaan in de activity en dan vervolgens bij het aanpassen van de lengte hier de nieuwe template uit op te halen. Dit is mij echter nog niet gelukt.
+* Morgenochtend worden de checkboxes van de planner geïmplementeerd, daarna is de Bèta-versie klaar.

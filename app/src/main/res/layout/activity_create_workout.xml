@@ -45,13 +45,45 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="20dp" />
 
+    <TextView
+        android:id="@+id/lengthTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/templateTextView"
+        android:layout_alignStart="@id/templateTextView"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="@string/template_length"/>
+
+    <TextView
+        android:id="@+id/lengthNumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/lengthTextView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:text="@string/length_number"/>
+
+    <SeekBar
+        android:id="@+id/lengthSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/lengthTextView"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="50dp"
+        android:layout_toEndOf="@id/lengthTextView"
+        android:layout_below="@id/templateTextView"
+        android:max="9"/>
+
     <View
         android:id="@+id/horizontalDivider"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@android:color/darker_gray"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/templateTextView"/>
+        android:layout_below="@id/lengthSeekBar"/>
 
     <ListView
         android:id="@+id/createWorkoutListView"

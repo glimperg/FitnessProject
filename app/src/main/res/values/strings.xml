@@ -24,4 +24,6 @@
     <string name="mon">Mon</string>
     <string name="edit_planner">Edit planner</string>
     <string name="choose_an_exercise">Choose an exercise</string>
+    <string name="template_length">Template length:</string>
+    <string name="length_number">1/10</string>
 </resources>

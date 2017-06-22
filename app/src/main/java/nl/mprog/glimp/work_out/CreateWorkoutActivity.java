@@ -1,7 +1,6 @@
 package nl.mprog.glimp.work_out;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class CreateWorkoutActivity extends AppCompatActivity {
@@ -38,8 +39,11 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     private ExerciseListAdapter exerciseListAdapter;
 
     private Spinner templateSpinner;
-    private String template;
     private EditText workoutEditText;
+    private TextView lengthTextView;
+
+    private String template;
+    private int length = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,8 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setTemplateListener();
-        setListener();
+        setSeekBarListener();
+        setListViewListener();
     }
 
     @Override
@@ -128,17 +133,39 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         templateSpinner.setAdapter(adapter);
     }
 
+    private void setSeekBarListener() {
+
+        SeekBar lengthSeekBar = (SeekBar) findViewById(R.id.lengthSeekBar);
+        lengthTextView = (TextView) findViewById(R.id.lengthNumberTextView);
+
+        lengthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                length = progress + 1;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                String lengthString = length + "/" + (seekBar.getMax()+1);
+                lengthTextView.setText(lengthString);
+                getTemplate();
+            }
+        });
+    }
+
     public void setTemplateListener() {
 
-        // TODO: templates implementeren
         templateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // get selected item
                 template = parent.getItemAtPosition(position).toString();
-
                 getTemplate();
+                // TODO: dit misschien efficienter maken zodat hij niet elke keer alle data hoeft op te vragen
             }
 
             @Override
@@ -157,8 +184,9 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
                 if (dataSnapshot.getKey().equals(template)) {
                     Workout templateWorkout = dataSnapshot.getValue(Workout.class);
+                    ArrayList<Exercise> newExercises = templateWorkout.getExercises();
                     exerciseList.clear();
-                    exerciseList.addAll(templateWorkout.getExercises());
+                    exerciseList.addAll(newExercises.subList(0,length));
                     exerciseListAdapter.notifyDataSetChanged();
                 }
             }
@@ -180,7 +208,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         });
     }
 
-    public void setListener() {
+    public void setListViewListener() {
 
         // TODO: evt. OnItemClickListener zodat je items kunt aanpassen ipv verwijderen en weer aanmaken
         // TODO: exerciseListView sorteerbaar maken
