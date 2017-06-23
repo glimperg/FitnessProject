@@ -1,6 +1,7 @@
 package nl.mprog.glimp.work_out;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -28,12 +30,16 @@ import java.util.ArrayList;
 public class PlannerFragment extends Fragment {
 
     private static final String TAG = "PlannerFragment";
+    private static final String PREFS_NAME = "plannerPrefs";
     private static final int daysOfWeek = 7;
 
     private ArrayList<Workout> plannerArrayList;
     private ListView plannerListView;
     private PlannerAdapter plannerAdapter;
     private FloatingActionButton floatingActionButton;
+    private boolean[] checkBoxState = new boolean[daysOfWeek];
+
+    private int workoutCount = 0;
 
     @Nullable
     @Override
@@ -44,6 +50,12 @@ public class PlannerFragment extends Fragment {
         plannerArrayList = new ArrayList<>(daysOfWeek);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.plannerActionButton);
 
+        TextView workoutCountTextView = (TextView) view.findViewById(R.id.workoutCountTextView);
+        String workoutCountText = "Workouts completed: " + workoutCount;
+        workoutCountTextView.setText(workoutCountText);
+
+
+        loadSharedPreferences();
         setPlanner();
         setAdapter();
         setListener();
@@ -52,10 +64,36 @@ public class PlannerFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        checkBoxState = plannerAdapter.getCheckBoxState();
+        workoutCount = plannerAdapter.getWorkoutCount();
+
+        editor.putInt("workoutCount", workoutCount);
+        for (int i = 0; i < daysOfWeek; i++) {
+            editor.putBoolean("checkBoxState" + i, checkBoxState[i]);
+            Log.d(TAG, "eind checkboxstate: " + i + checkBoxState[i]);
+        }
+        editor.apply();
+    }
+
+    public void loadSharedPreferences() {
+
+        SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        for (int i = 0; i < daysOfWeek; i++) {
+            checkBoxState[i] = preferences.getBoolean("checkBoxState" + i, false);
+            Log.d(TAG, "begin checkbox:" + i + checkBoxState[i]);
+        }
+    }
+
     public void setPlanner() {
 
         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         final DatabaseReference mDatabase = FirebaseDatabase
                 .getInstance().getReference().child("users");
 
@@ -104,7 +142,7 @@ public class PlannerFragment extends Fragment {
                 Workout workout = dataSnapshot.getValue(Workout.class);
                 plannerArrayList.add(workout);
 
-                plannerAdapter = new PlannerAdapter(getActivity(), plannerArrayList);
+                plannerAdapter = new PlannerAdapter(getActivity(), plannerArrayList, checkBoxState);
                 plannerListView.setAdapter(plannerAdapter);
             }
 
@@ -142,7 +180,6 @@ public class PlannerFragment extends Fragment {
         });
     }
 
-    // TODO: de checkboxes moeten iets doen
     // TODO: kijken wat er gebeurt als je een workout verwijdert die in de planner staat
 
     public void setButtonListener() {

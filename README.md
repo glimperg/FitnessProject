@@ -9,27 +9,21 @@ hoe je het beste aan de slag kunt gaan met fitness.
 Een gebalanceerde workout is essentieel om zo veel mogelijk voortgang te boeken,
 maar veel mensen weten niet precies welke oefeningen het beste bij elkaar passen
 en trainen daardoor bijvoorbeeld enkel hun buikspieren of biceps.
-<!--Verder kan het lastig zijn om een trainingsschema te maken om bijvoorbeeld
-naar een bepaald doel toe te werken.!-->
+Verder kan het lastig zijn om een goede planning met workouts te maken.
 
 *Work Out* probeert de gebruiker inzicht te geven in de mogelijkheden
 van een goede workout. Verder heeft de app het doel om (beginnende)
-sporters zo veel mogelijk te helpen bij het behalen van hun einddoel.
+sporters zo veel mogelijk te helpen bij het trainen.
 
 ## Kenmerken
 De gebruiker kan informatie vinden over allerlei oefeningen
 en aan de hand van deze oefeningen zelf een workout samenstellen.
-Hierbij kan gebruik worden gemaakt van een sjabloon die de gebruiker helpt bij het kiezen van het juiste aantal en de verhoudingen van soorten oefeningen.
-Vervolgens kunnen deze persoonlijke workouts worden geplaatst in een planner.
-Bij deze planner kan de gebruiker per dag een activiteit selecteren.
-Ten slotte kan de gebruiker tijdens de workout de app gebruiken om
-bij te houden hoe ver hij op dat moment met zijn workout is.
-Zo kan na het voltooien van een oefening op een knop worden gedrukt
-waarna een korte rustpauze wordt ingelast, om vervolgens verder te gaan
-met de volgende oefening.
+Hierbij kan gebruik worden gemaakt van een sjabloon die de gebruiker helpt bij het kiezen van de verhouding van soorten oefeningen.
+Ten slotte kunnen deze persoonlijke workouts worden geplaatst in een planner.
+Bij deze planner kan de gebruiker per dag een activiteit selecteren. Verder kunnen deze activiteiten worden afgevinkt na voltooiing.
 
 ## Technisch
-Er zijn vijf verschillende onderdelen van *Work Out*.
+Er zijn drie verschillende onderdelen van *Work Out*.
 Ten eerste is er een uitgebreide database met allerlei oefeningen.
 Er kan specifiek naar een oefening worden gezocht op basis van naam,
 spiergroep, benodigdheden, etc.
@@ -41,19 +35,10 @@ Verder is het mogelijk om met behulp van deze oefeningen
 zelf een workout samen te stellen. Hierbij wordt telkens een oefening en
 een bepaald aantal herhalingen gekozen.
 Deze workout kan zelf worden samengesteld, maar ook met behulp van een soort sjabloon.
-De gebruiker kan dan bijvoorbeeld aangeven de buikspieren te willen trainen, waarna er een sjabloon voor een workout van vijf oefeningen verschijnt. Er kan dan om en om een buikspier- en een rugspieroefening worden gekozen.
+De gebruiker kan dan bijvoorbeeld aangeven de buikspieren te willen trainen, waarna er een sjabloon voor een buikspierworkout verschijnt. Er kan dan om en om een buikspier- en een rugspieroefening worden gekozen.
 
 Daarnaast kan de gebruiker een trainingsschema aanmaken.
-Elke dag van de week kan worden opgevuld met vooraf gecreëerde workouts,
-persoonlijke workouts en cardio (hardlopen of fietsen).
-
-Ook is er de mogelijkheid om tijdens de workout de voortgang bij te houden.
-Na elke opdracht drukt de gebruiker op een knop om aan te geven dat hij klaar is.
-Bij opdrachten van een vaste tijdsduur loopt in plaats daarvan een timer.
-Vervolgens loopt er een timer voor een korte rustpauze,
-waarna de volgende opdracht begint.
-
-Ten slotte is er een profielpagina van de gebruiker. Deze pagina laat bijvoorbeeld zien hoeveel workouts de gebruiker heeft voltooid. Hier is eventueel ook enige aanpassing van de app mogelijk (bv. verschillende kleurenthema's die na een bepaald aantal workouts worden ontgrendeld).
+Elke dag van de week kan worden opgevuld met de gecreërde workouts, hardlopen, fietsen of een rustdag. Verder kunnen deze activiteiten worden aangevinkt bij voltooiing en wordt er bijgehouden hoeveel workouts er zijn voltooid.
 
 ## Visualisatie
 

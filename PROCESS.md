@@ -122,3 +122,8 @@ Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude work
 * SeekBar toegevoegd in CreateWorkoutActivity. Dit is een slider waarmee je de lengte van de templates kunt opgeven (van 1 tot 10), waarna de template wordt aangepast aan deze lengte.
 * De templates zijn nu volledig functioneel. Er is echter één inefficiënte oplossing bij de SeekBar. Er geldt namelijk dat de templates elke keer dat de lengte van de SeekBar wordt aangepast, opnieuw worden opgehaald uit Firebase. Het zou beter zijn om de behaalde template op te slaan in de activity en dan vervolgens bij het aanpassen van de lengte hier de nieuwe template uit op te halen. Dit is mij echter nog niet gelukt.
 * Morgenochtend worden de checkboxes van de planner geïmplementeerd, daarna is de Bèta-versie klaar.
+
+## Dag 5, 23-6-17
+
+* Checkboxes in de planner geïmplementeerd. Dit bleek moeilijker te zijn dan verwacht. Er moest namelijk in de PlannerAdapter een aantal dingen worden toegevoegd.
+* Teller toegevoegd in de planner die bijhoudt hoeveel workouts er zijn voltooid. Deze teller werkt echter nog niet goed.

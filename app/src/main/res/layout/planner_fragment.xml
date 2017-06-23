@@ -4,14 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ListView
-        android:id="@+id/plannerListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="10dp">
-    </ListView>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/plannerActionButton"
         android:layout_width="wrap_content"
@@ -23,5 +15,28 @@
         app:fabSize="normal"
         android:src="@mipmap/ic_mode_edit_white_24dp"
         android:onClick="editPlanner"/>
+
+    <TextView
+        android:id="@+id/workoutCountTextView"
+        android:text="@string/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@id/plannerActionButton"
+        android:paddingStart="16dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18sp"
+        />
+
+    <ListView
+        android:id="@+id/plannerListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentTop="true">
+    </ListView>
 
 </RelativeLayout>

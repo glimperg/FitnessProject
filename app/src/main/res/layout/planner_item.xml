@@ -30,10 +30,11 @@
         android:layout_weight="28"/>
 
     <CheckBox
-        android:id="@+id/plannerCheckbox"
+        android:id="@+id/plannerCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:focusableInTouchMode="true"
         android:layout_weight="0"/>
 
 </LinearLayout>
