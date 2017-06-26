@@ -50,11 +50,17 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
+        workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
+
+        Workout workout = (Workout) getIntent().getSerializableExtra("workout");
+        if (workout != null) {
+            exerciseList = workout.getExercises();
+            workoutEditText.setText(workout.getName());
+        }
+
         exerciseListView = (ListView) findViewById(R.id.createWorkoutListView);
         exerciseListAdapter = new ExerciseListAdapter(CreateWorkoutActivity.this, exerciseList);
         exerciseListView.setAdapter(exerciseListAdapter);
-
-        workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
 
         setSpinner();
 
@@ -73,14 +79,17 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
             String workoutTitle = workoutEditText.getText().toString();
 
-            if (exerciseList.size() > 0 && !workoutTitle.isEmpty()) {
+            // check if title only contains numbers and letters
+            boolean validTitle = workoutTitle.matches("[a-zA-Z0-9]*") && !workoutTitle.isEmpty();
+
+            if (exerciseList.size() > 0 && validTitle) {
                 saveWorkout();
 
                 Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 Toast.makeText(CreateWorkoutActivity.this, "Saved workout",
                         Toast.LENGTH_SHORT).show();
-                // TODO: moet naar WorkoutListFragment gaan
                 return true;
 
             } else if (exerciseList.size() == 0) {
@@ -89,7 +98,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 return true;
 
             } else {
-                Toast.makeText(CreateWorkoutActivity.this, "Please input a title",
+                Toast.makeText(CreateWorkoutActivity.this, "Please enter a valid title",
                         Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -214,7 +223,6 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         // TODO: exerciseListView sorteerbaar maken
 
         exerciseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            // TODO: evt. dit veranderen naar selecteren van exercises om te verwijderen (of mss in WorkoutListFragment)
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -243,17 +251,8 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         // get reference to Firebase database containing Driver objects
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("users").child(userId).child("workouts").child(workoutTitle)
-                .setValue(workout, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    System.out.println("Data could not be saved " + databaseError.getMessage());
-                } else {
-                    System.out.println("Data saved successfully.");
-                }
-            }
-        });
+        mDatabase.child("users").child(userId).child("workouts")
+                .child(workoutTitle).setValue(workout);
     }
 
 }

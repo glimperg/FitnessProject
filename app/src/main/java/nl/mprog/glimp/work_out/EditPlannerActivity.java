@@ -66,9 +66,9 @@ public class EditPlannerActivity extends AppCompatActivity {
 
             Intent intent = new Intent(EditPlannerActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
 
             Toast.makeText(EditPlannerActivity.this, "Saved planner", Toast.LENGTH_SHORT).show();
-            // TODO: moet naar PlannerFragment gaan
             return true;
         } else {
             return super.onOptionsItemSelected(item);

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -46,7 +47,8 @@ public class ChooseExerciseActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setAdapter();
-        setListener();
+        setClickListener();
+        setLongClickListener();
     }
 
     private void setAdapter() {
@@ -74,13 +76,16 @@ public class ChooseExerciseActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -91,10 +96,8 @@ public class ChooseExerciseActivity extends AppCompatActivity {
     }
 
 
-    private void setListener() {
-
-        // TODO: evt. longclicklistener om de exercise te kunnen bekijken
-
+    private void setClickListener() {
+        
         exerciseListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent,
@@ -107,6 +110,31 @@ public class ChooseExerciseActivity extends AppCompatActivity {
                 setResult(Activity.RESULT_OK, intent);
                 finish();
                 return true;
+            }
+        });
+    }
+
+    /**
+     * Add LongClickListener to child items. Source used:
+     * https://stackoverflow.com/questions/2353074/android-long-click-on-the-child-views-of-a-expandablelistview
+     */
+    private void setLongClickListener() {
+
+        exerciseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+                    int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+                    int childPosition = ExpandableListView.getPackedPositionChild(id);
+                    Exercise exercise = (Exercise) exerciseListAdapter.getChild(groupPosition,childPosition);
+
+                    Intent intent = new Intent(ChooseExerciseActivity.this, ExerciseActivity.class);
+                    intent.putExtra("exercise", exercise);
+                    startActivity(intent);
+                    return true;
+                }
+
+                return false;
             }
         });
     }

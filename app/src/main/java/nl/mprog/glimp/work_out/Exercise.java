@@ -25,52 +25,6 @@ public class Exercise implements Serializable{
     // constructor for Firebase
     public Exercise() {}
 
-    public Exercise(JSONObject exercise) {
-
-        String name, description, category, equipment, muscles;
-        name = description = category = equipment = muscles = "None";
-        int sets, reps;
-        sets = reps = 0;
-        ArrayList<String> images = new ArrayList<>();
-
-        try {
-            name = exercise.getString("name");
-            category = exercise.getString("category");
-
-            if (exercise.has("description")) {
-                description = exercise.getString("description");
-            }
-            if (exercise.has("equipment")) {
-                equipment = exercise.getString("equipment");
-            }
-            if (exercise.has("muscles")) {
-                muscles = exercise.getString("muscles");
-            }
-
-            if (exercise.has("images")) {
-                JSONArray array = exercise.getJSONArray("images");
-                for (int i = 0; i < array.length(); i++) {
-                    images.add(array.getString(i));
-                }
-            }
-
-            if (exercise.has("sets") && exercise.has("reps")) {
-                sets = exercise.getInt("sets");
-                reps = exercise.getInt("reps");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.equipment = equipment;
-        this.muscles = muscles;
-        this.images = images;
-        this.sets = sets;
-        this.reps = reps;
-    }
 
     public ArrayList<String> getImages() {
         return images;

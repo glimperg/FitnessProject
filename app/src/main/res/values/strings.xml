@@ -26,4 +26,6 @@
     <string name="choose_an_exercise">Choose an exercise</string>
     <string name="template_length">Template length:</string>
     <string name="length_number">1/10</string>
+    <string name="delete_action">Delete action</string>
+    <string name="edit_action">Edit action</string>
 </resources>

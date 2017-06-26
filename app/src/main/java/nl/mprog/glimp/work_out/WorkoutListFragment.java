@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -27,13 +25,13 @@ import java.util.ArrayList;
  */
 
 // TODO: textview voor als je geen workouts hebt
+// TODO: oplossen: als je teruggaat dan verschijnen de verwijderde workouts weer
 
 public class WorkoutListFragment extends Fragment {
     private static final String TAG = "WorkoutListFragment";
 
     private ListView listView;
     private WorkoutListAdapter listAdapter;
-    private String template;
     private ArrayList<Workout> workoutList = new ArrayList<>();
     private DatabaseReference mDatabase;
 
@@ -49,8 +47,7 @@ public class WorkoutListFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.workoutListView);
 
         setAdapter();
-        setOnItemClickListener();
-        setOnItemLongClickListener();
+        setListener();
 
         return view;
     }
@@ -72,14 +69,10 @@ public class WorkoutListFragment extends Fragment {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
@@ -92,7 +85,7 @@ public class WorkoutListFragment extends Fragment {
         });
     }
 
-    public void setOnItemClickListener() {
+    public void setListener() {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -105,22 +98,4 @@ public class WorkoutListFragment extends Fragment {
             }
         });
     }
-
-    public void setOnItemLongClickListener() {
-
-        // TODO: kijken of je het niet beter op een andere manier kan verwijderen (in WorkoutActivity?)
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Workout workout = listAdapter.getItem(position);
-                workoutList.remove(workout);
-                listAdapter.notifyDataSetChanged();
-                mDatabase.child(workout.getName()).removeValue();
-                return true;
-            }
-        });
-    }
-
 }
