@@ -127,3 +127,11 @@ Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude work
 
 * Checkboxes in de planner geïmplementeerd. Dit bleek moeilijker te zijn dan verwacht. Er moest namelijk in de PlannerAdapter een aantal dingen worden toegevoegd.
 * Teller toegevoegd in de planner die bijhoudt hoeveel workouts er zijn voltooid. Deze teller werkt echter nog niet goed.
+
+# Week 4
+
+## Dag 1, 26-6-17
+
+* Bij het aanmaken van een nieuwe workout wordt nu niet alleen gecheckt of er een titel is ingevuld, maar ook of er 'verboden tekens' in zitten. Er zijn namelijk een aantal tekens in Firebase die niet in de titel van een child kunnen zitten.
+* Manier van verwijderen van workouts aangepast. Eerst had ik een LongClickListener in WorkoutListFragment, maar dit is intuïtief niet heel duidelijk. Daarom is er nu een knop om de workout te verwijderen in de WorkoutActivity. Verder kun je nu ook bestaande workouts aanpassen d.m.v. een knop in WorkoutActivity.
+* LongClickListener in ChooseExerciseActivity toegevoegd, waardoor je nu ook de inhoud van een oefening kan zien voordat je hem selecteert voor een workout.

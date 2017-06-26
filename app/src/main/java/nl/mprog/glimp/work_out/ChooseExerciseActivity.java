@@ -97,7 +97,7 @@ public class ChooseExerciseActivity extends AppCompatActivity {
 
 
     private void setClickListener() {
-        
+
         exerciseListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent,
