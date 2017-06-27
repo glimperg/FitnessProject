@@ -26,16 +26,12 @@ public class PlannerAdapter extends ArrayAdapter<Workout> {
     private Context context;
     private ArrayList<Workout> workoutList;
     private boolean[] checkBoxState;
-    private int workoutCount;
 
     public PlannerAdapter(Context context, ArrayList<Workout> workoutList, boolean[] checkBoxState) {
         super(context, 0, workoutList);
         this.context = context;
         this.workoutList = workoutList;
         this.checkBoxState = checkBoxState;
-
-        SharedPreferences preferences = context.getSharedPreferences(PREFS_NAME, 0);
-        this.workoutCount = preferences.getInt("workoutCount", 0);
     }
 
     @NonNull
@@ -68,13 +64,6 @@ public class PlannerAdapter extends ArrayAdapter<Workout> {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 checkBoxState[position] = isChecked;
-                if (!workoutName.equals("Rest day")) {
-                    if (isChecked) {
-                        workoutCount++;
-                    } else {
-                        workoutCount--;
-                    }
-                }
             }
         });
         checkBox.setChecked(checkBoxState[position]);
@@ -84,9 +73,5 @@ public class PlannerAdapter extends ArrayAdapter<Workout> {
 
     public boolean[] getCheckBoxState() {
         return checkBoxState;
-    }
-
-    public int getWorkoutCount() {
-        return workoutCount;
     }
 }
