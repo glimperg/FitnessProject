@@ -135,3 +135,11 @@ Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude work
 * Bij het aanmaken van een nieuwe workout wordt nu niet alleen gecheckt of er een titel is ingevuld, maar ook of er 'verboden tekens' in zitten. Er zijn namelijk een aantal tekens in Firebase die niet in de titel van een child kunnen zitten.
 * Manier van verwijderen van workouts aangepast. Eerst had ik een LongClickListener in WorkoutListFragment, maar dit is intuïtief niet heel duidelijk. Daarom is er nu een knop om de workout te verwijderen in de WorkoutActivity. Verder kun je nu ook bestaande workouts aanpassen d.m.v. een knop in WorkoutActivity.
 * LongClickListener in ChooseExerciseActivity toegevoegd, waardoor je nu ook de inhoud van een oefening kan zien voordat je hem selecteert voor een workout.
+
+## Dag 2, 27-6-17
+
+* Heel veel bugs gefixt. Ten eerste wordt nu in elke activity gecheckt of de gebruiker verbinding heeft met internet. Anders verschijnt er een AlertDialog met een melding en een "Retry"-knop. De verbinding wordt gecheckt met behulp van een nieuwe CheckNetwork class, die in de onCreate wordt aangeroepen.
+* Ervoor gezorgd dat workouts niet meer overschreven kunnen worden. Dit was veel werk, vooral dankzij Firebase. Er moet namelijk gecontroleerd worden of de titel van de workout niet al in de database zit. Dit bleek niet te werken met een ChildEventListener, maar wel met een ValueEventListener; de reden hiervoor is niet duidelijk.
+* Verder het aanpassen van workouts veranderd. De oude workout moet namelijk verwijderd worden, iets wat eerst niet gebeurde.
+* Aantal kleine bugfixes.
+* Veel code opgeschoond.
