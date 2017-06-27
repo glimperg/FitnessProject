@@ -21,7 +21,6 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         app:fabSize="normal"
-        android:src="@mipmap/ic_add_white_18dp"
-        android:onClick="newWorkout"/>
+        android:src="@mipmap/ic_add_white_18dp"/>
 
 </RelativeLayout>

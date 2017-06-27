@@ -32,12 +32,7 @@ public class ImageAsyncTask extends AsyncTask<Object, Void, Bitmap> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        assert image != null;
-        // return scaled image
-        // TODO: hiermee experimenteren
-        int newWidth = Math.min((int)(image.getWidth()*0.5),600);
-        int newHeight = Math.min((int)(image.getHeight()*0.5),400);
-        return Bitmap.createScaledBitmap(image,newWidth,newHeight,true);
+        return image;
 
     }
 
@@ -45,7 +40,13 @@ public class ImageAsyncTask extends AsyncTask<Object, Void, Bitmap> {
     protected void onPostExecute(Bitmap result) {
         super.onPostExecute(result);
 
-        imageView.setImageBitmap(result);
+        if (result != null) {
+            int newWidth = Math.min((int) (result.getWidth() * 0.5), 400);
+            int newHeight = Math.min((int) (result.getHeight() * 0.6), 400);
+            Bitmap scaledImage = Bitmap.createScaledBitmap(result, newWidth, newHeight, true);
+
+            imageView.setImageBitmap(scaledImage);
+        }
     }
 }
 

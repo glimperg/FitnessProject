@@ -13,22 +13,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         app:fabSize="normal"
-        android:src="@mipmap/ic_mode_edit_white_24dp"
-        android:onClick="editPlanner"/>
-
-    <TextView
-        android:id="@+id/workoutCountTextView"
-        android:text="@string/placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@id/plannerActionButton"
-        android:paddingStart="16dp"
-        android:paddingEnd="5dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:textSize="18sp"
-        />
+        android:src="@mipmap/ic_mode_edit_white_24dp" />
 
     <ListView
         android:id="@+id/plannerListView"

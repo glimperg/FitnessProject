@@ -3,6 +3,8 @@
     package="nl.mprog.glimp.work_out">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -11,19 +13,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.MainActivity.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WorkoutActivity" />
-        <activity android:name=".CreateWorkoutActivity" />
-        <activity android:name=".ChooseExerciseActivity" />
-        <activity android:name=".EditPlannerActivity" />
-        <activity android:name=".ExerciseActivity" />
-        <activity android:name=".ChooseWorkoutActivity" />
+        <activity android:name=".Activities.WorkoutActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.CreateWorkoutActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.ChooseExerciseActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.EditPlannerActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activities.ExerciseActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

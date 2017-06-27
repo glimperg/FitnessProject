@@ -1,4 +1,4 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Gido Limperg on 8-6-2017.
  */
 
-class SectionsPageAdapter extends FragmentPagerAdapter {
+public class SectionsPageAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();

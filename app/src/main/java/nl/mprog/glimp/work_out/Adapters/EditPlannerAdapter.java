@@ -1,4 +1,4 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import nl.mprog.glimp.work_out.R;
+import nl.mprog.glimp.work_out.Workout;
 
 /**
  * Created by Gido Limperg on 19-6-2017.

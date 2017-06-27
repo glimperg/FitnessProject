@@ -1,4 +1,4 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,15 +17,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import nl.mprog.glimp.work_out.CheckNetwork;
+import nl.mprog.glimp.work_out.Adapters.ExerciseListAdapter;
+import nl.mprog.glimp.work_out.Exercise;
+import nl.mprog.glimp.work_out.Activities.MainActivity.MainActivity;
+import nl.mprog.glimp.work_out.R;
+import nl.mprog.glimp.work_out.Workout;
+
 // TODO: ergens plaatjes toevoegen in ListView die de categorie aangeven
 
 public class WorkoutActivity extends AppCompatActivity {
+    private static final String TAG = "WorkoutActivity";
 
     ListView exerciseListView;
     ArrayList<Exercise> exerciseList;
@@ -35,43 +47,28 @@ public class WorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
-        workout = (Workout) getIntent().getSerializableExtra("workout");
-        exerciseList = workout.getExercises();
+        if (CheckNetwork.isInternetAvailable(WorkoutActivity.this)) {
+            workout = (Workout) getIntent().getSerializableExtra("workout");
+            exerciseList = workout.getExercises();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.workoutToolbar);
-        toolbar.setTitle(workout.getName());
-        setSupportActionBar(toolbar);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.workoutToolbar);
+            toolbar.setTitle(workout.getName());
+            setSupportActionBar(toolbar);
 
-        exerciseListView = (ListView) findViewById(R.id.exerciseWorkoutListView);
-        ExerciseListAdapter exerciseListAdapter = new ExerciseListAdapter(this, exerciseList);
-        exerciseListView.setAdapter(exerciseListAdapter);
+            exerciseListView = (ListView) findViewById(R.id.exerciseWorkoutListView);
+            ExerciseListAdapter exerciseListAdapter = new ExerciseListAdapter(this, exerciseList);
+            exerciseListView.setAdapter(exerciseListAdapter);
 
-        String equipment = getEquipment();
-        // remove last comma and space
-        equipment = equipment.substring(0,equipment.length() - 2);
-        String equipmentString = "Equipment: " + equipment;
-        TextView equipmentView = (TextView) findViewById(R.id.equipmentTextView);
-        equipmentView.setText(equipmentString);
+            String equipment = getEquipment();
+            // remove last comma and space
+            equipment = equipment.substring(0, equipment.length() - 2);
+            String equipmentString = "Equipment: " + equipment;
+            TextView equipmentView = (TextView) findViewById(R.id.equipmentTextView);
+            equipmentView.setText(equipmentString);
 
-        setListener();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.actionEdit) {
-
-            Intent intent = new Intent(WorkoutActivity.this, CreateWorkoutActivity.class);
-            intent.putExtra("workout", workout);
-            startActivity(intent);
-            finish();
-            return true;
-        } else if (item.getItemId() == R.id.actionDelete) {
-
-            createBuilder();
-            return true;
+            setListener();
         } else {
-            return super.onOptionsItemSelected(item);
+            CheckNetwork.displayAlertDialog(WorkoutActivity.this);
         }
     }
 
@@ -82,6 +79,27 @@ public class WorkoutActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.actionEdit) {
+
+            Intent intent = new Intent(WorkoutActivity.this, CreateWorkoutActivity.class);
+            intent.putExtra("workout", workout);
+            intent.putExtra("editWorkout", true);
+            startActivity(intent);
+            finish();
+            return true;
+
+        } else if (item.getItemId() == R.id.actionDelete) {
+            createBuilder();
+            return true;
+
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void createBuilder() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(WorkoutActivity.this);
@@ -90,11 +108,7 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference()
-                        .child("users").child(userId).child("workouts");
-                mDatabase.child(workout.getName()).removeValue();
+                removeWorkout(workout.getName());
 
                 Intent intent = new Intent(WorkoutActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -110,6 +124,41 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    public void removeWorkout(final String name) {
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(userId);
+
+        mDatabase.child("workouts").child(name).removeValue();
+
+        mDatabase.child("planner").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                if (dataSnapshot.child("name").getValue().equals(name)) {
+                    Workout restDay = new Workout("Rest day", null);
+                    mDatabase.child("planner").child(dataSnapshot.getKey()).setValue(restDay);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // getting the data failed, log a message
+                Log.w(TAG, "Something went wrong: ", databaseError.toException());
+            }
+        });
     }
 
     private String getEquipment() {

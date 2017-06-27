@@ -1,11 +1,13 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import nl.mprog.glimp.work_out.Exercise;
+import nl.mprog.glimp.work_out.ImageAsyncTask;
+import nl.mprog.glimp.work_out.R;
 
 public class ExerciseActivity extends AppCompatActivity {
 

@@ -1,9 +1,5 @@
 package nl.mprog.glimp.work_out;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -11,7 +7,7 @@ import java.util.ArrayList;
  * Created by Gido Limperg on 8-6-2017.
  */
 
-public class Exercise implements Serializable{
+public class Exercise implements Serializable {
 
     private String name;
     private String description;
@@ -23,7 +19,8 @@ public class Exercise implements Serializable{
     private int reps;
 
     // constructor for Firebase
-    public Exercise() {}
+    public Exercise() {
+    }
 
 
     public ArrayList<String> getImages() {
@@ -53,21 +50,5 @@ public class Exercise implements Serializable{
     public String getName() {
 
         return name;
-    }
-
-    public int getSets() {
-        return sets;
-    }
-
-    public void setSets(int sets) {
-        this.sets = sets;
-    }
-
-    public int getReps() {
-        return reps;
-    }
-
-    public void setReps(int reps) {
-        this.reps = reps;
     }
 }

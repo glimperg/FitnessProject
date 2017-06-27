@@ -1,4 +1,4 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,19 +10,22 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import nl.mprog.glimp.work_out.R;
+import nl.mprog.glimp.work_out.Workout;
+
 /**
- * Created by Gido Limperg on 15-6-2017.
+ * Created by Gido Limperg on 13-6-2017.
  */
 
-public class ExerciseListAdapter extends ArrayAdapter<Exercise> {
+public class WorkoutListAdapter extends ArrayAdapter<Workout> {
 
     private Context context;
-    private ArrayList<Exercise> exerciseList;
+    private ArrayList<Workout> workoutList;
 
-    public ExerciseListAdapter(Context context, ArrayList<Exercise> exerciseList) {
-        super(context, 0, exerciseList);
+    public WorkoutListAdapter(Context context, ArrayList<Workout> workoutList) {
+        super(context, 0, workoutList);
         this.context = context;
-        this.exerciseList = exerciseList;
+        this.workoutList = workoutList;
     }
 
     @NonNull
@@ -35,10 +38,10 @@ public class ExerciseListAdapter extends ArrayAdapter<Exercise> {
             convertView = inflater.inflate(R.layout.list_group, parent, false);
         }
 
-        // set exercise title to TextView
-        Exercise exercise = exerciseList.get(position);
+        // set workout title to TextView
+        Workout workout = workoutList.get(position);
         TextView textView = (TextView) convertView.findViewById(R.id.categoryTextView);
-        textView.setText(exercise.getName());
+        textView.setText(workout.getName());
 
         return convertView;
     }

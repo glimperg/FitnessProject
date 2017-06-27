@@ -1,5 +1,6 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Activities.MainActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.mprog.glimp.work_out.Activities.ExerciseActivity;
+import nl.mprog.glimp.work_out.Adapters.CustomExpandableListAdapter;
+import nl.mprog.glimp.work_out.CheckNetwork;
+import nl.mprog.glimp.work_out.Exercise;
+import nl.mprog.glimp.work_out.R;
+
 /**
  * Created by Gido Limperg on 8-6-2017.
  */
@@ -38,7 +45,6 @@ public class DatabaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("exercises");
     }
 
     @Nullable
@@ -46,9 +52,13 @@ public class DatabaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.database_fragment, container, false);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("exercises");
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+
         setAdapter();
         setListener();
+
         return view;
     }
 

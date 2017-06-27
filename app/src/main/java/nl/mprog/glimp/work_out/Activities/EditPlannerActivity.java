@@ -1,4 +1,4 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import nl.mprog.glimp.work_out.Adapters.EditPlannerAdapter;
+import nl.mprog.glimp.work_out.Activities.MainActivity.MainActivity;
+import nl.mprog.glimp.work_out.CheckNetwork;
+import nl.mprog.glimp.work_out.R;
+import nl.mprog.glimp.work_out.Workout;
+
 public class EditPlannerActivity extends AppCompatActivity {
 
     private static final String TAG = "EditPlannerActivity";
@@ -39,23 +45,27 @@ public class EditPlannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_planner);
 
-        Workout[] plannerWorkouts = (Workout[]) getIntent().getSerializableExtra("planner");
-        plannerArrayList = new ArrayList<>(Arrays.asList(plannerWorkouts));
+        if (CheckNetwork.isInternetAvailable(EditPlannerActivity.this)) {
+            Workout[] plannerWorkouts = (Workout[]) getIntent().getSerializableExtra("planner");
+            plannerArrayList = new ArrayList<>(Arrays.asList(plannerWorkouts));
 
-        // add non-workout options to list of Workouts
-        workoutList.add(new Workout("Rest day", null));
-        workoutList.add(new Workout("Cycling", null));
-        workoutList.add(new Workout("Running", null));
+            // add non-workout options to list of Workouts
+            workoutList.add(new Workout("Rest day", null));
+            workoutList.add(new Workout("Cycling", null));
+            workoutList.add(new Workout("Running", null));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.editPlannerToolbar);
-        setSupportActionBar(toolbar);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.editPlannerToolbar);
+            setSupportActionBar(toolbar);
 
-        editPlannerListView = (ListView) findViewById(R.id.editPlannerListView);
-        editPlannerAdapter = new EditPlannerAdapter(this, plannerArrayList);
-        editPlannerListView.setAdapter(editPlannerAdapter);
+            editPlannerListView = (ListView) findViewById(R.id.editPlannerListView);
+            editPlannerAdapter = new EditPlannerAdapter(this, plannerArrayList);
+            editPlannerListView.setAdapter(editPlannerAdapter);
 
-        getWorkouts();
-        setListener();
+            getWorkouts();
+            setListener();
+        } else {
+            CheckNetwork.displayAlertDialog(EditPlannerActivity.this);
+        }
     }
 
     @Override

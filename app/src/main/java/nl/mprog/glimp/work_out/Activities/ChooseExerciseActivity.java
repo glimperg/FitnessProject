@@ -1,4 +1,4 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,13 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +21,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.mprog.glimp.work_out.Adapters.CustomExpandableListAdapter;
+import nl.mprog.glimp.work_out.CheckNetwork;
+import nl.mprog.glimp.work_out.Exercise;
+import nl.mprog.glimp.work_out.R;
+
 public class ChooseExerciseActivity extends AppCompatActivity {
 
     private static final String TAG = "ChooseExerciseActivity";
@@ -34,21 +36,24 @@ public class ChooseExerciseActivity extends AppCompatActivity {
     private HashMap<String, List<Exercise>> childItemsList = new HashMap<>();
     private DatabaseReference mDatabase;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_exercise);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("exercises");
-        exerciseListView = (ExpandableListView) findViewById(R.id.chooseExerciseListView);
+        if (CheckNetwork.isInternetAvailable(ChooseExerciseActivity.this)) {
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("exercises");
+            exerciseListView = (ExpandableListView) findViewById(R.id.chooseExerciseListView);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.chooseExerciseToolbar);
-        setSupportActionBar(toolbar);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.chooseExerciseToolbar);
+            setSupportActionBar(toolbar);
 
-        setAdapter();
-        setClickListener();
-        setLongClickListener();
+            setAdapter();
+            setClickListener();
+            setLongClickListener();
+        } else {
+        CheckNetwork.displayAlertDialog(ChooseExerciseActivity.this);
+        }
     }
 
     private void setAdapter() {

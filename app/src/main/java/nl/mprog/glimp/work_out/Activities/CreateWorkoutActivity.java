@@ -1,4 +1,4 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -24,9 +24,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import nl.mprog.glimp.work_out.Adapters.ExerciseListAdapter;
+import nl.mprog.glimp.work_out.CheckNetwork;
+import nl.mprog.glimp.work_out.Exercise;
+import nl.mprog.glimp.work_out.Activities.MainActivity.MainActivity;
+import nl.mprog.glimp.work_out.R;
+import nl.mprog.glimp.work_out.Workout;
 
 
 public class CreateWorkoutActivity extends AppCompatActivity {
@@ -38,38 +45,56 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     private ListView exerciseListView;
     private ExerciseListAdapter exerciseListAdapter;
 
+    private DatabaseReference mDatabase;
+    private String userId;
+
     private Spinner templateSpinner;
     private EditText workoutEditText;
     private TextView lengthTextView;
 
     private String template;
     private int length = 1;
+    private boolean editWorkout;
+    private String oldWorkoutTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
-        workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
+        if (CheckNetwork.isInternetAvailable(CreateWorkoutActivity.this)) {
 
-        Workout workout = (Workout) getIntent().getSerializableExtra("workout");
-        if (workout != null) {
-            exerciseList = workout.getExercises();
-            workoutEditText.setText(workout.getName());
+            // get user ID and reference to Firebase database
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            Intent intent = getIntent();
+            editWorkout = intent.getBooleanExtra("editWorkout", false);
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
+            setSupportActionBar(toolbar);
+            workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
+
+            if (editWorkout) {
+                toolbar.setTitle("Edit workout");
+                Workout workout = (Workout) intent.getSerializableExtra("workout");
+                exerciseList = workout.getExercises();
+                oldWorkoutTitle = workout.getName();
+                workoutEditText.setText(oldWorkoutTitle);
+            }
+
+            // get ListView and set ListAdapter
+            exerciseListView = (ListView) findViewById(R.id.createWorkoutListView);
+            exerciseListAdapter = new ExerciseListAdapter(CreateWorkoutActivity.this, exerciseList);
+            exerciseListView.setAdapter(exerciseListAdapter);
+
+            setSpinner();
+            setTemplateListener();
+            setSeekBarListener();
+            setListViewListener();
+        } else {
+            CheckNetwork.displayAlertDialog(CreateWorkoutActivity.this);
         }
-
-        exerciseListView = (ListView) findViewById(R.id.createWorkoutListView);
-        exerciseListAdapter = new ExerciseListAdapter(CreateWorkoutActivity.this, exerciseList);
-        exerciseListView.setAdapter(exerciseListAdapter);
-
-        setSpinner();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
-        setSupportActionBar(toolbar);
-
-        setTemplateListener();
-        setSeekBarListener();
-        setListViewListener();
     }
 
     @Override
@@ -77,19 +102,34 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.actionComplete) {
 
-            String workoutTitle = workoutEditText.getText().toString();
+            final String workoutTitle = workoutEditText.getText().toString();
 
             // check if title only contains numbers and letters
-            boolean validTitle = workoutTitle.matches("[a-zA-Z0-9]*") && !workoutTitle.isEmpty();
+            boolean validTitle = workoutTitle.matches("[a-zA-Z0-9]+");
 
             if (exerciseList.size() > 0 && validTitle) {
-                saveWorkout();
 
-                Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-                Toast.makeText(CreateWorkoutActivity.this, "Saved workout",
-                        Toast.LENGTH_SHORT).show();
+                mDatabase.child("users").child(userId).child("workouts").child(workoutTitle)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        // check if workout with name workoutTitle already exists
+                        // or (when editing workout) if the title is unchanged
+                        if (!dataSnapshot.exists() || workoutTitle.equals(oldWorkoutTitle)) {
+
+                            saveWorkout(workoutTitle);
+                            Toast.makeText(CreateWorkoutActivity.this, "Saved workout",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(CreateWorkoutActivity.this, "That title is already used",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
                 return true;
 
             } else if (exerciseList.size() == 0) {
@@ -121,6 +161,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         if (requestCode == CHOOSE_EXERCISE_RESULT) {
             if (resultCode == RESULT_OK) {
 
+                // get exercise and add to list
                 Exercise exercise = (Exercise) data.getSerializableExtra("exercise");
                 exerciseList.add(exercise);
                 exerciseListAdapter.notifyDataSetChanged();
@@ -130,10 +171,28 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         }
     }
 
+    public void saveWorkout(String title) {
+
+        if (editWorkout) {
+            // remove old workout
+            mDatabase.child("users").child(userId).child("workouts").child(oldWorkoutTitle).removeValue();
+        }
+
+        // save workout to database
+        Workout workout = new Workout(title, exerciseList);
+        mDatabase.child("users").child(userId).child("workouts").child(title).setValue(workout);
+
+        // go back to MainActivity
+        Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void setSpinner() {
 
         templateSpinner = (Spinner) findViewById(R.id.templateSpinner);
 
+        // create ArrayAdapter using template array and default layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 CreateWorkoutActivity.this, R.array.template_array, android.R.layout.simple_spinner_item);
 
@@ -159,6 +218,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                // set length of SeekBar to TextView
                 String lengthString = length + "/" + (seekBar.getMax()+1);
                 lengthTextView.setText(lengthString);
                 getTemplate();
@@ -186,15 +246,19 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
     public void getTemplate() {
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("templates");
-        mDatabase.addChildEventListener(new ChildEventListener() {
+        mDatabase.child("templates").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+                // find workout corresponding to template
                 if (dataSnapshot.getKey().equals(template)) {
+
                     Workout templateWorkout = dataSnapshot.getValue(Workout.class);
+
+                    // set new Exercise list
                     ArrayList<Exercise> newExercises = templateWorkout.getExercises();
                     exerciseList.clear();
+
                     exerciseList.addAll(newExercises.subList(0,length));
                     exerciseListAdapter.notifyDataSetChanged();
                 }
@@ -219,13 +283,11 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
     public void setListViewListener() {
 
-        // TODO: evt. OnItemClickListener zodat je items kunt aanpassen ipv verwijderen en weer aanmaken
-        // TODO: exerciseListView sorteerbaar maken
-
         exerciseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
+                // remove exercise upon long click
                 Exercise exercise = exerciseListAdapter.getItem(position);
                 exerciseList.remove(exercise);
                 exerciseListAdapter.notifyDataSetChanged();
@@ -239,20 +301,4 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         Intent intent = new Intent(CreateWorkoutActivity.this, ChooseExerciseActivity.class);
         startActivityForResult(intent, CHOOSE_EXERCISE_RESULT);
     }
-
-    public void saveWorkout() {
-
-        // TODO: ervoor zorgen dat workouts niet worden overschreven
-
-        String workoutTitle = workoutEditText.getText().toString();
-        Workout workout = new Workout(workoutTitle, exerciseList);
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // get reference to Firebase database containing Driver objects
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mDatabase.child("users").child(userId).child("workouts")
-                .child(workoutTitle).setValue(workout);
-    }
-
 }

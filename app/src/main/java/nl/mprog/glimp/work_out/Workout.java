@@ -1,7 +1,5 @@
 package nl.mprog.glimp.work_out;
 
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

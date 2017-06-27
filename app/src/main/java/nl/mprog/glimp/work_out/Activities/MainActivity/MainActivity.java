@@ -1,6 +1,5 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Activities.MainActivity;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -8,15 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+import nl.mprog.glimp.work_out.Adapters.SectionsPageAdapter;
+import nl.mprog.glimp.work_out.CheckNetwork;
+import nl.mprog.glimp.work_out.R;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
@@ -26,27 +26,29 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private FirebaseAuth mAuth;
-    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: Starting.");
 
-        // initialise Firebase authentication
-        mAuth = FirebaseAuth.getInstance();
+        if (CheckNetwork.isInternetAvailable(MainActivity.this)) {
 
-        signInAnonymously();
+            // initialise Firebase authentication
+            mAuth = FirebaseAuth.getInstance();
 
-        // set up ViewPager with SectionsPageAdapter
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
-        setViewPager(mViewPager);
+            signInAnonymously();
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-        setListener();
+            // set up ViewPager with SectionsPageAdapter
+            ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
+            setViewPager(mViewPager);
 
+            // set up tabs with ViewPager
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(mViewPager);
+        } else {
+            CheckNetwork.displayAlertDialog(MainActivity.this);
+        }
     }
 
     private void signInAnonymously() {
@@ -76,36 +78,5 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new PlannerFragment(), "Planner");
 
         viewPager.setAdapter(adapter);
-    }
-
-    public void setListener() {
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                // TODO: regelen dat de fab verdwijnt als je de workouts tab verlaat (en weer verschijnt)
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
-    public void newWorkout(View view) {
-
-        Intent intent = new Intent(MainActivity.this, CreateWorkoutActivity.class);
-        startActivity(intent);
-    }
-
-    public void editPlanner(View view) {
-
-        Intent intent = new Intent(MainActivity.this, EditPlannerActivity.class);
-        startActivity(intent);
     }
 }

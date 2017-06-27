@@ -1,5 +1,6 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Activities.MainActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -22,6 +22,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+
+import nl.mprog.glimp.work_out.Activities.EditPlannerActivity;
+import nl.mprog.glimp.work_out.Activities.WorkoutActivity;
+import nl.mprog.glimp.work_out.Adapters.PlannerAdapter;
+import nl.mprog.glimp.work_out.CheckNetwork;
+import nl.mprog.glimp.work_out.R;
+import nl.mprog.glimp.work_out.Workout;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
@@ -39,7 +46,8 @@ public class PlannerFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private boolean[] checkBoxState = new boolean[daysOfWeek];
 
-    private int workoutCount = 0;
+    private String userId;
+    private DatabaseReference mDatabase;
 
     @Nullable
     @Override
@@ -50,16 +58,16 @@ public class PlannerFragment extends Fragment {
         plannerArrayList = new ArrayList<>(daysOfWeek);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.plannerActionButton);
 
-        TextView workoutCountTextView = (TextView) view.findViewById(R.id.workoutCountTextView);
-        String workoutCountText = "Workouts completed: " + workoutCount;
-        workoutCountTextView.setText(workoutCountText);
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
         loadSharedPreferences();
-        setPlanner();
+
+        setDefaultPlanner();
         setAdapter();
         setListener();
-        setButtonListener();
+        setFloatingActionButton();
 
         return view;
     }
@@ -72,9 +80,8 @@ public class PlannerFragment extends Fragment {
         SharedPreferences.Editor editor = preferences.edit();
 
         checkBoxState = plannerAdapter.getCheckBoxState();
-        workoutCount = plannerAdapter.getWorkoutCount();
 
-        editor.putInt("workoutCount", workoutCount);
+        // save CheckBox states to SharedPreferences
         for (int i = 0; i < daysOfWeek; i++) {
             editor.putBoolean("checkBoxState" + i, checkBoxState[i]);
             Log.d(TAG, "eind checkboxstate: " + i + checkBoxState[i]);
@@ -85,30 +92,29 @@ public class PlannerFragment extends Fragment {
     public void loadSharedPreferences() {
 
         SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
+
+        // load CheckBox states from SharedPreferences
         for (int i = 0; i < daysOfWeek; i++) {
             checkBoxState[i] = preferences.getBoolean("checkBoxState" + i, false);
-            Log.d(TAG, "begin checkbox:" + i + checkBoxState[i]);
         }
     }
 
-    public void setPlanner() {
+    public void setDefaultPlanner() {
 
-        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final DatabaseReference mDatabase = FirebaseDatabase
-                .getInstance().getReference().child("users");
-
-        mDatabase.addChildEventListener(new ChildEventListener() {
+        mDatabase.child("users").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                if (dataSnapshot.child(userId).child("planner").getChildrenCount() > 0) {
+                // check if planner already exists
+                if (dataSnapshot.child(userId).child("planner").getChildrenCount() == 0) {
 
                     // add default values to planner
                     ArrayList<Workout> defaultPlanner = new ArrayList<>(daysOfWeek);
                     for (int i = 0; i < daysOfWeek; i++) {
                         defaultPlanner.add(new Workout("Rest day", null));
                     }
-                    mDatabase.child(userId).child("planner").setValue(defaultPlanner);
+                    // save default planner to Firebase
+                    mDatabase.child("users").child(userId).child("planner").setValue(defaultPlanner);
                 }
             }
 
@@ -131,12 +137,8 @@ public class PlannerFragment extends Fragment {
 
     public void setAdapter() {
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference()
-                .child("users").child(userId).child("planner");
-
-        mDatabase.addChildEventListener(new ChildEventListener() {
+        mDatabase.child("users").child(userId).child("planner")
+                .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Workout workout = dataSnapshot.getValue(Workout.class);
@@ -169,6 +171,7 @@ public class PlannerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                // get workout corresponding to clicked item
                 Workout workout = plannerAdapter.getItem(position);
                 if (workout.getExercises().size() > 0) {
 
@@ -180,18 +183,17 @@ public class PlannerFragment extends Fragment {
         });
     }
 
-    // TODO: kijken wat er gebeurt als je een workout verwijdert die in de planner staat
-
-    public void setButtonListener() {
+    public void setFloatingActionButton() {
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), EditPlannerActivity.class);
-
+                // convert ArrayList<Workout> to Workout[]
                 Workout[] plannerWorkouts = new Workout[plannerArrayList.size()];
                 plannerWorkouts = plannerArrayList.toArray(plannerWorkouts);
+
+                Intent intent = new Intent(getActivity(), EditPlannerActivity.class);
                 intent.putExtra("planner", plannerWorkouts);
                 startActivity(intent);
             }

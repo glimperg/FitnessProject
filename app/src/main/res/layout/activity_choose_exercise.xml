@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="nl.mprog.glimp.work_out.ChooseExerciseActivity">
+    tools:context="nl.mprog.glimp.work_out.Activities.ChooseExerciseActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/chooseExerciseToolbar"

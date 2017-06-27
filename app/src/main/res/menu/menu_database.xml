@@ -1,4 +1,4 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="nl.mprog.glimp.work_out.MainActivity">
+    tools:context="nl.mprog.glimp.work_out.Activities.MainActivity.MainActivity">
 
 </menu>

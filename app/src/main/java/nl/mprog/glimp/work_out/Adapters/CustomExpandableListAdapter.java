@@ -1,4 +1,4 @@
-package nl.mprog.glimp.work_out;
+package nl.mprog.glimp.work_out.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+
+import nl.mprog.glimp.work_out.Exercise;
+import nl.mprog.glimp.work_out.R;
 
 /**
  * Created by glimp on 9-6-2017.
