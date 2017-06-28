@@ -283,7 +283,6 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 // get selected item
                 template = parent.getItemAtPosition(position).toString();
                 getTemplate();
-                // TODO: dit misschien efficienter maken zodat hij niet elke keer alle data hoeft op te vragen
             }
 
             @Override

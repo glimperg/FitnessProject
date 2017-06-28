@@ -81,7 +81,6 @@ public class WorkoutListFragment extends Fragment {
                 Workout workout = dataSnapshot.getValue(Workout.class);
                 workoutList.add(workout);
 
-                // TODO: soms crasht hij hier (NullPointerException)
                 // initialise ListAdapter and set to ListView
                 listAdapter = new WorkoutListAdapter(activity, workoutList);
                 listView.setAdapter(listAdapter);

@@ -22,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,6 +92,7 @@ public class WorkoutActivity extends AppCompatActivity {
             intent.putExtra("editWorkout", true);
             startActivity(intent);
             finish();
+
             return true;
 
         } else if (item.getItemId() == R.id.actionDelete) {
@@ -119,6 +119,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 // go back to MainActivity
                 Intent intent = new Intent(WorkoutActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
 
@@ -149,13 +150,11 @@ public class WorkoutActivity extends AppCompatActivity {
         // remove Workout from list of Workouts
         mDatabase.child("workouts").child(name).removeValue();
 
-        mDatabase.child("planner").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("planner").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 // check if planner contains Workout
-                Log.d(TAG, "test: " + dataSnapshot.child("name").getValue());
-                // TODO: dit gaat mis (verwijderen), getValue() geeft null
                 if (dataSnapshot.child("name").getValue().equals(name)) {
 
                     // change Workout to default Workout
@@ -163,6 +162,15 @@ public class WorkoutActivity extends AppCompatActivity {
                     mDatabase.child("planner").child(dataSnapshot.getKey()).setValue(restDay);
                 }
             }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
