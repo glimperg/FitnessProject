@@ -209,17 +209,49 @@ public class CreateWorkoutActivity extends AppCompatActivity {
      */
     public void saveWorkout(String title) {
 
+        // new workout
+        final Workout workout = new Workout(title, exerciseList);
+
+        final DatabaseReference userDatabase = mDatabase.child("users").child(userId);
+
         if (editWorkout) {
             // remove old workout
-            mDatabase.child("users").child(userId).child("workouts").child(oldWorkoutTitle).removeValue();
+            userDatabase.child("workouts").child(oldWorkoutTitle).removeValue();
+
+            userDatabase.child("planner").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                    // check if old workout is in planner
+                    if (dataSnapshot.child("name").getValue().equals(oldWorkoutTitle)) {
+
+                        userDatabase.child("planner").child(dataSnapshot.getKey()).setValue(workout);
+                    }
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // getting the data failed, log a message
+                    Log.w(TAG, "Something went wrong: ", databaseError.toException());
+                }
+            });
         }
 
         // save workout to Firebase database
-        Workout workout = new Workout(title, exerciseList);
-        mDatabase.child("users").child(userId).child("workouts").child(title).setValue(workout);
+        userDatabase.child("workouts").child(title).setValue(workout);
 
         // go back to MainActivity
         Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }

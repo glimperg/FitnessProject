@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -148,11 +149,13 @@ public class WorkoutActivity extends AppCompatActivity {
         // remove Workout from list of Workouts
         mDatabase.child("workouts").child(name).removeValue();
 
-        // check if planner contains Workout
-        mDatabase.child("planner").addChildEventListener(new ChildEventListener() {
+        mDatabase.child("planner").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
+                // check if planner contains Workout
+                Log.d(TAG, "test: " + dataSnapshot.child("name").getValue());
+                // TODO: dit gaat mis (verwijderen), getValue() geeft null
                 if (dataSnapshot.child("name").getValue().equals(name)) {
 
                     // change Workout to default Workout
@@ -160,15 +163,6 @@ public class WorkoutActivity extends AppCompatActivity {
                     mDatabase.child("planner").child(dataSnapshot.getKey()).setValue(restDay);
                 }
             }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {

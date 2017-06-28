@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,6 @@ public class PlannerFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private boolean[] checkBoxState = new boolean[daysOfWeek];
 
-    private String userId;
     private DatabaseReference mDatabase;
 
     @Nullable
@@ -58,9 +58,9 @@ public class PlannerFragment extends Fragment {
         plannerArrayList = new ArrayList<>(daysOfWeek);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.plannerActionButton);
 
-        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(userId).child("planner");
 
         loadSharedPreferences();
 
@@ -84,7 +84,6 @@ public class PlannerFragment extends Fragment {
         // save CheckBox states to SharedPreferences
         for (int i = 0; i < daysOfWeek; i++) {
             editor.putBoolean("checkBoxState" + i, checkBoxState[i]);
-            Log.d(TAG, "eind checkboxstate: " + i + checkBoxState[i]);
         }
         editor.apply();
     }
@@ -101,31 +100,23 @@ public class PlannerFragment extends Fragment {
 
     public void setDefaultPlanner() {
 
-        mDatabase.child("users").addChildEventListener(new ChildEventListener() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // check if planner already exists
-                if (dataSnapshot.child(userId).child("planner").getChildrenCount() == 0) {
+                // check if planner exists
+                if (!dataSnapshot.exists()) {
 
                     // add default values to planner
                     ArrayList<Workout> defaultPlanner = new ArrayList<>(daysOfWeek);
                     for (int i = 0; i < daysOfWeek; i++) {
                         defaultPlanner.add(new Workout("Rest day", null));
                     }
+
                     // save default planner to Firebase
-                    mDatabase.child("users").child(userId).child("planner").setValue(defaultPlanner);
+                    mDatabase.setValue(defaultPlanner);
                 }
             }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -137,8 +128,7 @@ public class PlannerFragment extends Fragment {
 
     public void setAdapter() {
 
-        mDatabase.child("users").child(userId).child("planner")
-                .addChildEventListener(new ChildEventListener() {
+        mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Workout workout = dataSnapshot.getValue(Workout.class);
@@ -187,7 +177,7 @@ public class PlannerFragment extends Fragment {
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
                 // convert ArrayList<Workout> to Workout[]
                 Workout[] plannerWorkouts = new Workout[plannerArrayList.size()];

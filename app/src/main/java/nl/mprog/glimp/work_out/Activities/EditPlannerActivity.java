@@ -63,6 +63,7 @@ public class EditPlannerActivity extends AppCompatActivity {
 
             getWorkouts();
             setListener();
+
         } else {
             CheckNetwork.displayAlertDialog(EditPlannerActivity.this);
         }
@@ -75,6 +76,7 @@ public class EditPlannerActivity extends AppCompatActivity {
             savePlanner();
 
             Intent intent = new Intent(EditPlannerActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
 

@@ -1,5 +1,6 @@
 package nl.mprog.glimp.work_out.Activities.MainActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,8 +33,6 @@ import nl.mprog.glimp.work_out.Workout;
  * Created by Gido Limperg on 8-6-2017.
  */
 
-// TODO: oplossen: als je teruggaat dan verschijnen de verwijderde workouts weer
-
 public class WorkoutListFragment extends Fragment {
     private static final String TAG = "WorkoutListFragment";
 
@@ -41,6 +41,7 @@ public class WorkoutListFragment extends Fragment {
     private ArrayList<Workout> workoutList = new ArrayList<>();
     private DatabaseReference mDatabase;
     private FloatingActionButton floatingActionButton;
+    private Activity activity;
 
     @Nullable
     @Override
@@ -49,6 +50,8 @@ public class WorkoutListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.workout_list_fragment, container, false);
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        activity = getActivity();
 
         // get reference to Firebase database containing Workouts
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("workouts");
@@ -68,15 +71,19 @@ public class WorkoutListFragment extends Fragment {
      */
     public void setAdapter() {
 
+        Log.d(TAG, "test " + WorkoutListFragment.this.isAdded());
+
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+                // get Workout from Firebase and add to list
                 Workout workout = dataSnapshot.getValue(Workout.class);
                 workoutList.add(workout);
 
                 // TODO: soms crasht hij hier (NullPointerException)
-                listAdapter = new WorkoutListAdapter(getActivity(), workoutList);
+                // initialise ListAdapter and set to ListView
+                listAdapter = new WorkoutListAdapter(activity, workoutList);
                 listView.setAdapter(listAdapter);
             }
 
