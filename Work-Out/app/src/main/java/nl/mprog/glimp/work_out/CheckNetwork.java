@@ -26,7 +26,7 @@ public class CheckNetwork {
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = service.getActiveNetworkInfo();
 
-        return info == null;
+        return !(info == null);
     }
 
     /**
