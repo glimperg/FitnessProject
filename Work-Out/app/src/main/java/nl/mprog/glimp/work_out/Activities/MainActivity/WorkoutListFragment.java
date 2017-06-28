@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,10 +53,12 @@ public class WorkoutListFragment extends Fragment {
         View view = inflater.inflate(R.layout.workout_list_fragment, container, false);
         activity = getActivity();
 
-        // get reference to Firebase database containing Workouts
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase = FirebaseDatabase.getInstance().getReference()
-                .child("users").child(userId).child("workouts");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // get reference to Firebase database
+            mDatabase = FirebaseDatabase.getInstance().getReference()
+                    .child("users").child(user.getUid()).child("workouts");
+        }
 
         listView = (ListView) view.findViewById(R.id.workoutListView);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.workoutActionButton);

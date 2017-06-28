@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,10 +54,12 @@ public class PlannerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.planner_fragment, container, false);
 
-        // get user ID and reference to Firebase database
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase = FirebaseDatabase.getInstance().getReference()
-                .child("users").child(userId).child("planner");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // get reference to Firebase database
+            mDatabase = FirebaseDatabase.getInstance().getReference()
+                    .child("users").child(user.getUid()).child("planner");
+        }
 
         plannerListView = (ListView) view.findViewById(R.id.plannerListView);
         plannerArrayList = new ArrayList<>(DAYS_OF_WEEK);
@@ -80,17 +83,19 @@ public class PlannerFragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = preferences.edit();
+        if (plannerAdapter != null) {
+            SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
+            SharedPreferences.Editor editor = preferences.edit();
 
-        // get state of CheckBoxes from ListAdapter
-        checkBoxState = plannerAdapter.getCheckBoxState();
+            // get state of CheckBoxes from ListAdapter
+            checkBoxState = plannerAdapter.getCheckBoxState();
 
-        // save CheckBox states to SharedPreferences
-        for (int i = 0; i < DAYS_OF_WEEK; i++) {
-            editor.putBoolean("checkBoxState" + i, checkBoxState[i]);
+            // save CheckBox states to SharedPreferences
+            for (int i = 0; i < DAYS_OF_WEEK; i++) {
+                editor.putBoolean("checkBoxState" + i, checkBoxState[i]);
+            }
+            editor.apply();
         }
-        editor.apply();
     }
 
     /**

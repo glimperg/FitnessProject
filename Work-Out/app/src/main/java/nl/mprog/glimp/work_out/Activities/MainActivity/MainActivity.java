@@ -13,6 +13,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import nl.mprog.glimp.work_out.Adapters.SectionsPageAdapter;
 import nl.mprog.glimp.work_out.CheckNetwork;
@@ -25,7 +27,10 @@ import nl.mprog.glimp.work_out.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     private ViewPager mViewPager;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         if (CheckNetwork.isInternetAvailable(MainActivity.this)) {
 
             // initialise Firebase authentication
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            mAuth.signInAnonymously();
+            mAuth = FirebaseAuth.getInstance();
+            signInAnonymously();
 
             // set up ViewPager with SectionsPageAdapter
             mViewPager = (ViewPager) findViewById(R.id.container);
@@ -49,6 +54,23 @@ public class MainActivity extends AppCompatActivity {
         } else {
             CheckNetwork.displayAlertDialog(MainActivity.this);
         }
+    }
+
+    /**
+     * Signs in user anonymously using Firebase authentication.
+     */
+    private void signInAnonymously() {
+
+        mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()) {
+                    Log.w(TAG, "signInAnonymously:failure", task.getException());
+                    Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     /**
