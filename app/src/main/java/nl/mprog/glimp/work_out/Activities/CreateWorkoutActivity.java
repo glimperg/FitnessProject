@@ -62,6 +62,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
+        // check internet connection
         if (CheckNetwork.isInternetAvailable(CreateWorkoutActivity.this)) {
 
             // get user ID and reference to Firebase database
@@ -71,6 +72,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             Intent intent = getIntent();
             editWorkout = intent.getBooleanExtra("editWorkout", false);
 
+            // initialise Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
             setSupportActionBar(toolbar);
             workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);

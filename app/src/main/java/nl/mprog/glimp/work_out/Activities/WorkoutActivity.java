@@ -47,21 +47,23 @@ public class WorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
+        // check internet connection
         if (CheckNetwork.isInternetAvailable(WorkoutActivity.this)) {
             workout = (Workout) getIntent().getSerializableExtra("workout");
             exerciseList = workout.getExercises();
 
+            // initialise Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.workoutToolbar);
             toolbar.setTitle(workout.getName());
             setSupportActionBar(toolbar);
 
+            // set ListAdapter to the ListView
             exerciseListView = (ListView) findViewById(R.id.exerciseWorkoutListView);
             ExerciseListAdapter exerciseListAdapter = new ExerciseListAdapter(this, exerciseList);
             exerciseListView.setAdapter(exerciseListAdapter);
 
+            // initialise equipment TextView
             String equipment = getEquipment();
-            // remove last comma and space
-            equipment = equipment.substring(0, equipment.length() - 2);
             String equipmentString = "Equipment: " + equipment;
             TextView equipmentView = (TextView) findViewById(R.id.equipmentTextView);
             equipmentView.setText(equipmentString);
@@ -92,7 +94,7 @@ public class WorkoutActivity extends AppCompatActivity {
             return true;
 
         } else if (item.getItemId() == R.id.actionDelete) {
-            createBuilder();
+            createAlertDialog();
             return true;
 
         } else {
@@ -100,7 +102,10 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    private void createBuilder() {
+    /**
+     * Creates and displays an AlertDialog for confirmation of deletion.
+     */
+    private void createAlertDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(WorkoutActivity.this);
         builder.setMessage("Are you sure you want to delete this workout?");
@@ -110,6 +115,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 removeWorkout(workout.getName());
 
+                // go back to MainActivity
                 Intent intent = new Intent(WorkoutActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -126,19 +132,29 @@ public class WorkoutActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Removes Workout from Firebase database.
+     * @param name: title of the Workout to be removed.
+     */
     public void removeWorkout(final String name) {
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // get reference to Firebase database
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("users").child(userId);
 
+        // remove Workout from list of Workouts
         mDatabase.child("workouts").child(name).removeValue();
 
+        // check if planner contains Workout
         mDatabase.child("planner").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 if (dataSnapshot.child("name").getValue().equals(name)) {
+
+                    // change Workout to default Workout
                     Workout restDay = new Workout("Rest day", null);
                     mDatabase.child("planner").child(dataSnapshot.getKey()).setValue(restDay);
                 }
@@ -161,12 +177,21 @@ public class WorkoutActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get all necessary equipment for a workout.
+     * @return String with required equipment for the workout.
+     */
     private String getEquipment() {
 
+        // ArrayList with all equipment for the workout
         ArrayList<String> equipmentList = new ArrayList<>();
 
         for (Exercise exercise : exerciseList) {
+
+            // String with equipment for one exercise, separated by a comma
             String exerciseEquipment = exercise.getEquipment();
+
+            // ArrayList with all equipment for one exercise
             ArrayList<String> exerciseEquipmentList = new ArrayList<>(Arrays.asList(exerciseEquipment.split(", ")));
 
             for (String equipment : exerciseEquipmentList) {
@@ -176,14 +201,22 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         }
 
+        // convert ArrayList to String
         StringBuilder stringBuilder = new StringBuilder();
         for (String string : equipmentList) {
             String stringComma = string + ", ";
             stringBuilder.append(stringComma);
         }
-        return stringBuilder.toString();
+        String equipment = stringBuilder.toString();
+
+        // remove last comma and space
+        return equipment.substring(0, equipment.length() - 2);
     }
 
+
+    /**
+     * Set OnItemClickListener to ListView, sending the user to ExerciseActivity upon click.
+     */
     public void setListener() {
 
         exerciseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -196,5 +229,4 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
     }
-
 }

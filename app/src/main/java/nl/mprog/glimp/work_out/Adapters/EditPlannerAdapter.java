@@ -15,6 +15,7 @@ import nl.mprog.glimp.work_out.Workout;
 
 /**
  * Created by Gido Limperg on 19-6-2017.
+ * ArrayAdapter to be used in EditPlannerActivity.
  */
 
 public class EditPlannerAdapter extends ArrayAdapter<Workout> {

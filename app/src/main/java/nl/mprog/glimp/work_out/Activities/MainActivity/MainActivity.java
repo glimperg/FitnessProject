@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // check internet connection
         if (CheckNetwork.isInternetAvailable(MainActivity.this)) {
 
             // initialise Firebase authentication
@@ -51,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Signs in device anonymously using Firebase authentication.
+     */
     private void signInAnonymously() {
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -70,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Sets adapter containing Fragments to the ViewPager.
+     */
     private void setViewPager(ViewPager viewPager){
 
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());

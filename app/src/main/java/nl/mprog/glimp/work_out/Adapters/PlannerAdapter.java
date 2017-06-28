@@ -18,11 +18,11 @@ import nl.mprog.glimp.work_out.Workout;
 
 /**
  * Created by Gido Limperg on 19-6-2017.
+ * ArrayAdapter to be used in PlannerFragment.
  */
 
 public class PlannerAdapter extends ArrayAdapter<Workout> {
 
-    private static final String PREFS_NAME = "plannerPrefs";
     private Context context;
     private ArrayList<Workout> workoutList;
     private boolean[] checkBoxState;
@@ -54,11 +54,13 @@ public class PlannerAdapter extends ArrayAdapter<Workout> {
 
         // set workout title to TextView
         Workout workout = workoutList.get(position);
-        final String workoutName = workout.getName();
+        String workoutName = workout.getName();
         TextView workoutTextView = (TextView) convertView.findViewById(R.id.plannerWorkoutTextView);
         workoutTextView.setText(workoutName);
 
         CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.plannerCheckBox);
+
+        // save CheckBox state upon change
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -1,6 +1,5 @@
 package nl.mprog.glimp.work_out.Activities.MainActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import nl.mprog.glimp.work_out.Activities.CreateWorkoutActivity;
 import nl.mprog.glimp.work_out.Activities.WorkoutActivity;
 import nl.mprog.glimp.work_out.Adapters.WorkoutListAdapter;
-import nl.mprog.glimp.work_out.CheckNetwork;
 import nl.mprog.glimp.work_out.R;
 import nl.mprog.glimp.work_out.Workout;
 
@@ -66,7 +64,7 @@ public class WorkoutListFragment extends Fragment {
     }
 
     /**
-     * Adds all workouts to workoutList and creates ListAdapter.
+     * Adds all Workouts to workoutList and sets ListAdapter to the ListView.
      */
     public void setAdapter() {
 
