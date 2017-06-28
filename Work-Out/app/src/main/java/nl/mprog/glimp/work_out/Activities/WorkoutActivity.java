@@ -33,6 +33,11 @@ import nl.mprog.glimp.work_out.Activities.MainActivity.MainActivity;
 import nl.mprog.glimp.work_out.R;
 import nl.mprog.glimp.work_out.Workout;
 
+/**
+ * Created by Gido Limperg on 8-6-2017.
+ * Activity which displays information about a Workout.
+ * Also lets the user edit or delete this Workout.
+ */
 
 public class WorkoutActivity extends AppCompatActivity {
     private static final String TAG = "WorkoutActivity";
@@ -48,30 +53,39 @@ public class WorkoutActivity extends AppCompatActivity {
 
         // check internet connection
         if (CheckNetwork.isInternetAvailable(WorkoutActivity.this)) {
+
+            // get Workout from intent
             workout = (Workout) getIntent().getSerializableExtra("workout");
             exerciseList = workout.getExercises();
 
-            // set up Toolbar
-            Toolbar toolbar = (Toolbar) findViewById(R.id.workoutToolbar);
-            toolbar.setTitle(workout.getName());
-            setSupportActionBar(toolbar);
-
-            // set ListAdapter to the ListView
-            exerciseListView = (ListView) findViewById(R.id.exerciseWorkoutListView);
-            ExerciseListAdapter exerciseListAdapter = new ExerciseListAdapter(this, exerciseList);
-            exerciseListView.setAdapter(exerciseListAdapter);
-
-            // initialise equipment TextView
-            String equipment = getEquipment();
-            String equipmentString = "Equipment: " + equipment;
-            TextView equipmentView = (TextView) findViewById(R.id.equipmentTextView);
-            equipmentView.setText(equipmentString);
+            setViews();
 
             setListener();
 
         } else {
             CheckNetwork.displayAlertDialog(WorkoutActivity.this);
         }
+    }
+
+    /**
+     * Set various Views and set adapter to ListView.
+     */
+    public void setViews() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.workoutToolbar);
+        toolbar.setTitle(workout.getName());
+        setSupportActionBar(toolbar);
+
+        // set ListAdapter to ListView
+        exerciseListView = (ListView) findViewById(R.id.exerciseWorkoutListView);
+        ExerciseListAdapter exerciseListAdapter = new ExerciseListAdapter(this, exerciseList);
+        exerciseListView.setAdapter(exerciseListAdapter);
+
+        // initialise equipment TextView
+        String equipment = getEquipment();
+        String equipmentString = "Equipment: " + equipment;
+        TextView equipmentView = (TextView) findViewById(R.id.equipmentTextView);
+        equipmentView.setText(equipmentString);
     }
 
     @Override
@@ -82,11 +96,18 @@ public class WorkoutActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * @inheritDoc
+     * Lets the user edit or delete the Workout.
+     * @param item the clicked MenuItem.
+     * @return a boolean (true or false).
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.actionEdit) {
 
+            // go to CreateWorkoutActivity
             Intent intent = new Intent(WorkoutActivity.this, CreateWorkoutActivity.class);
             intent.putExtra("workout", workout);
             intent.putExtra("editWorkout", true);
@@ -96,6 +117,7 @@ public class WorkoutActivity extends AppCompatActivity {
             return true;
 
         } else if (item.getItemId() == R.id.actionDelete) {
+
             createAlertDialog();
             return true;
 
@@ -142,8 +164,6 @@ public class WorkoutActivity extends AppCompatActivity {
     public void removeWorkout(final String name) {
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // get reference to Firebase database
         final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("users").child(userId);
 
@@ -181,7 +201,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     /**
-     * Get all necessary equipment for a workout.
+     * Gets all necessary equipment for a workout.
      * @return String with required equipment for the workout.
      */
     private String getEquipment() {
@@ -196,6 +216,7 @@ public class WorkoutActivity extends AppCompatActivity {
             // ArrayList with all equipment for one exercise
             ArrayList<String> exerciseEquipmentList = new ArrayList<>(Arrays.asList(exerciseEquipment.split(", ")));
 
+            // add equipment if not yet in equipmentList
             for (String equipment : exerciseEquipmentList) {
                 if (!equipmentList.contains(equipment)) {
                     equipmentList.add(equipment);
@@ -217,7 +238,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     /**
-     * Set OnItemClickListener to ListView, sending the user to ExerciseActivity upon click.
+     * Sets OnItemClickListener to ListView, sending the user to ExerciseActivity upon click.
      */
     public void setListener() {
 

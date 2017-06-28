@@ -42,6 +42,7 @@ public class PlannerAdapter extends ArrayAdapter<Workout> {
             LayoutInflater inflater = (LayoutInflater)
                     context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.planner_item, parent, false);
+
         } else {
             CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.plannerCheckBox);
             checkBox.setOnCheckedChangeListener(null);
@@ -64,7 +65,6 @@ public class PlannerAdapter extends ArrayAdapter<Workout> {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 checkBoxState[position] = isChecked;
             }
         });

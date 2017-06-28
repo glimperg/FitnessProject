@@ -9,21 +9,31 @@ import nl.mprog.glimp.work_out.Exercise;
 import nl.mprog.glimp.work_out.ImageAsyncTask;
 import nl.mprog.glimp.work_out.R;
 
+/**
+ * Created by Gido Limperg on 8-6-2017.
+ * Activity which displays information about an Exercise.
+ */
+
 public class ExerciseActivity extends AppCompatActivity {
 
-    Exercise exercise;
+    private Exercise exercise;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
 
+        // get Exercise from intent
         exercise = (Exercise) getIntent().getSerializableExtra("exercise");
         setViews();
     }
 
+    /**
+     * Sets information about the Exercise to the Views.
+     */
     private void setViews() {
 
+        // initialise Views
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         TextView titleView = (TextView) findViewById(R.id.titleView);
         TextView descriptionView = (TextView) findViewById(R.id.descriptionView);
@@ -38,11 +48,10 @@ public class ExerciseActivity extends AppCompatActivity {
         String equipment = "Equipment: " + exercise.getEquipment();
         String muscles = "Muscles: " + exercise.getMuscles();
 
+        // set text to TextViews
         titleView.setText(exercise.getName());
         descriptionView.setText(description);
         equipmentView.setText(equipment);
         musclesView.setText(muscles);
     }
-
-
 }

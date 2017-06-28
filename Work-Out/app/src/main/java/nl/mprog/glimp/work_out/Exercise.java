@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
+ * Exercise class containing information about an exercise.
  */
 
 public class Exercise implements Serializable {
@@ -22,7 +23,6 @@ public class Exercise implements Serializable {
     public Exercise() {
     }
 
-
     public ArrayList<String> getImages() {
         return images;
     }
@@ -35,11 +35,6 @@ public class Exercise implements Serializable {
     public String getEquipment() {
 
         return equipment;
-    }
-
-    public String getCategory() {
-
-        return category;
     }
 
     public String getDescription() {

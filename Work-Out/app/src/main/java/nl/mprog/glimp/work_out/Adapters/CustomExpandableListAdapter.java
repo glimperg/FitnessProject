@@ -14,7 +14,8 @@ import nl.mprog.glimp.work_out.Exercise;
 import nl.mprog.glimp.work_out.R;
 
 /**
- * Created by glimp on 9-6-2017.
+ * Created by Gido Limperg on 9-6-2017.
+ * ExpandableListAdapter for use in DatabaseFragment and ChooseExerciseActivity.
  */
 
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
@@ -37,9 +38,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_group, parent, false);
         }
 
+        // set category name to TextView
         String category = (String) getGroup(groupPosition);
         TextView categoryTextView = (TextView) convertView.findViewById(R.id.categoryTextView);
         categoryTextView.setText(category);
+
         return convertView;
     }
 
@@ -50,10 +53,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_item, parent, false);
         }
 
+        // set Exercise name to TextView
         Exercise exercise = (Exercise) getChild(groupPosition, childPosition);
         String exerciseName = exercise.getName();
         TextView exerciseTextView = (TextView) convertView.findViewById(R.id.exerciseTextView);
         exerciseTextView.setText(exerciseName);
+
         return convertView;
     }
 

@@ -35,6 +35,10 @@ import nl.mprog.glimp.work_out.Activities.MainActivity.MainActivity;
 import nl.mprog.glimp.work_out.R;
 import nl.mprog.glimp.work_out.Workout;
 
+/**
+ * Created by Gido Limperg on 8-6-2017.
+ * Activity for creating a new Workout.
+ */
 
 public class CreateWorkoutActivity extends AppCompatActivity {
 
@@ -48,7 +52,6 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String userId;
 
-    private Spinner templateSpinner;
     private EditText workoutEditText;
     private TextView lengthTextView;
 
@@ -69,35 +72,9 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
-            // check whether or not the user is editing a workout
-            Intent intent = getIntent();
-            editWorkout = intent.getBooleanExtra("editWorkout", false);
-
-            // set up Toolbar
-            Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
-            setSupportActionBar(toolbar);
-            workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
-
-            if (editWorkout) {
-
-                toolbar.setTitle("Edit workout");
-
-                // get Workout to be edited
-                Workout workout = (Workout) intent.getSerializableExtra("workout");
-
-                // set old Workout properties to layout
-                exerciseList = workout.getExercises();
-                oldWorkoutTitle = workout.getName();
-                workoutEditText.setText(oldWorkoutTitle);
-            }
-
-            // get ListView and set ListAdapter
-            exerciseListView = (ListView) findViewById(R.id.createWorkoutListView);
-            exerciseListAdapter = new ExerciseListAdapter(CreateWorkoutActivity.this, exerciseList);
-            exerciseListView.setAdapter(exerciseListAdapter);
+            setViews();
 
             setTemplateSpinner();
-            setTemplateListener();
 
             setSeekBarListener();
             setListViewListener();
@@ -105,6 +82,37 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         } else {
             CheckNetwork.displayAlertDialog(CreateWorkoutActivity.this);
         }
+    }
+
+    /**
+     * Initialise various Views and set adapter to ListView.
+     */
+    public void setViews() {
+
+        // check whether or not the user is editing a workout
+        Intent intent = getIntent();
+        editWorkout = intent.getBooleanExtra("editWorkout", false);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
+        setSupportActionBar(toolbar);
+        workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
+
+        if (editWorkout) {
+
+            toolbar.setTitle("Edit workout");
+
+            // Workout to be edited
+            Workout workout = (Workout) intent.getSerializableExtra("workout");
+
+            // set old Workout properties to layout
+            exerciseList = workout.getExercises();
+            oldWorkoutTitle = workout.getName();
+            workoutEditText.setText(oldWorkoutTitle);
+        }
+
+        exerciseListView = (ListView) findViewById(R.id.createWorkoutListView);
+        exerciseListAdapter = new ExerciseListAdapter(CreateWorkoutActivity.this, exerciseList);
+        exerciseListView.setAdapter(exerciseListAdapter);
     }
 
     @Override
@@ -117,9 +125,8 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
     /**
      * @inheritDoc
-     *
      * Saves Workout when button is clicked (if the Workout is valid).
-     * @param item: the clicked MenuItem.
+     * @param item the clicked MenuItem.
      * @return a boolean (true or false).
      */
     @Override
@@ -155,7 +162,6 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
     /**
      * @inheritDoc
-     *
      * Gets Exercise from ChooseExerciseActivity and adds Exercise to list.
      */
     @Override
@@ -164,7 +170,6 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         if (requestCode == CHOOSE_EXERCISE_RESULT) {
             if (resultCode == RESULT_OK) {
 
-                // get exercise and add to list
                 Exercise exercise = (Exercise) data.getSerializableExtra("exercise");
                 exerciseList.add(exercise);
                 exerciseListAdapter.notifyDataSetChanged();
@@ -175,8 +180,8 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     }
 
     /**
-     * Check if Workout can be saved and if so, save the Workout.
-     * @param workoutTitle: title of the Workout
+     * Checks if Workout can be saved and if so, saves the Workout.
+     * @param workoutTitle title of the Workout to be saved.
      */
     public void checkTitle(final String workoutTitle) {
 
@@ -205,49 +210,21 @@ public class CreateWorkoutActivity extends AppCompatActivity {
 
     /**
      * Saves Workout to Firebase database and returns to MainActivity.
-     * @param title: the name of the Workout to be saved.
+     * @param workoutTitle title of the Workout to be saved.
      */
-    public void saveWorkout(String title) {
+    public void saveWorkout(String workoutTitle) {
 
-        // new workout
-        final Workout workout = new Workout(title, exerciseList);
+        // initialise new workout
+        final Workout workout = new Workout(workoutTitle, exerciseList);
 
         final DatabaseReference userDatabase = mDatabase.child("users").child(userId);
 
         if (editWorkout) {
-            // remove old workout
-            userDatabase.child("workouts").child(oldWorkoutTitle).removeValue();
-
-            userDatabase.child("planner").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                    // check if old workout is in planner
-                    if (dataSnapshot.child("name").getValue().equals(oldWorkoutTitle)) {
-
-                        userDatabase.child("planner").child(dataSnapshot.getKey()).setValue(workout);
-                    }
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // getting the data failed, log a message
-                    Log.w(TAG, "Something went wrong: ", databaseError.toException());
-                }
-            });
+            removeOldWorkout(userDatabase, workout);
         }
 
         // save workout to Firebase database
-        userDatabase.child("workouts").child(title).setValue(workout);
+        userDatabase.child("workouts").child(workoutTitle).setValue(workout);
 
         // go back to MainActivity
         Intent intent = new Intent(CreateWorkoutActivity.this, MainActivity.class);
@@ -257,11 +234,51 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     }
 
     /**
+     * Removes old workout from Firebase database and sets new workout to planner.
+     * @param userDatabase DatabaseReference to the userId Firebase database.
+     * @param workout new Workout to be added to the planner.
+     */
+    public void removeOldWorkout(final DatabaseReference userDatabase, final Workout workout) {
+
+        // remove old workout
+        userDatabase.child("workouts").child(oldWorkoutTitle).removeValue();
+
+        userDatabase.child("planner").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                // check if old workout is in planner
+                if (dataSnapshot.child("name").getValue().equals(oldWorkoutTitle)) {
+
+                    // set new Workout to planner
+                    userDatabase.child("planner")
+                            .child(dataSnapshot.getKey()).setValue(workout);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // getting the data failed, log a message
+                Log.w(TAG, "Something went wrong: ", databaseError.toException());
+            }
+        });
+    }
+
+    /**
      * Sets ArrayAdapter to templateSpinner.
      */
     public void setTemplateSpinner() {
 
-        templateSpinner = (Spinner) findViewById(R.id.templateSpinner);
+        Spinner templateSpinner = (Spinner) findViewById(R.id.templateSpinner);
 
         // create ArrayAdapter using template array and default layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -270,18 +287,23 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         // specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         templateSpinner.setAdapter(adapter);
+
+        setTemplateListener(templateSpinner);
     }
 
     /**
-     * Set listener to templateSpinner, obtaining a new template upon item selection.
+     * Sets listener to spinner, obtaining a new template upon item selection.
+     * @param spinner the corresponding Spinner to set the listener on.
      */
-    public void setTemplateListener() {
+    public void setTemplateListener(Spinner spinner) {
 
-        templateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // get selected item
+
                 template = parent.getItemAtPosition(position).toString();
+
+                // get template corresponding to template String
                 getTemplate();
             }
 
@@ -318,13 +340,14 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 String lengthString = length + "/" + (seekBar.getMax()+1);
                 lengthTextView.setText(lengthString);
 
+                // update template with new length
                 getTemplate();
             }
         });
     }
 
     /**
-     * Get template workout from Firebase and add exercises from template to list.
+     * Gets template workout from Firebase and adds exercises from template to list.
      */
     public void getTemplate() {
 
@@ -364,7 +387,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     }
 
     /**
-     * Set LongClickListener to ListView, removing Exercise upon long click.
+     * Sets LongClickListener to ListView, removing Exercise upon long click.
      */
     public void setListViewListener() {
 
@@ -372,7 +395,6 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                // remove Exercise
                 Exercise exercise = exerciseListAdapter.getItem(position);
                 exerciseList.remove(exercise);
                 exerciseListAdapter.notifyDataSetChanged();
@@ -382,8 +404,8 @@ public class CreateWorkoutActivity extends AppCompatActivity {
     }
 
     /**
-     * Go to ChooseExerciseActivity when FloatingActionButton is clicked.
-     * @param view: View corresponding to the clicked button.
+     * Goes to ChooseExerciseActivity when FloatingActionButton is clicked.
+     * @param view View corresponding to the clicked button.
      */
     public void newExercise(View view) {
 

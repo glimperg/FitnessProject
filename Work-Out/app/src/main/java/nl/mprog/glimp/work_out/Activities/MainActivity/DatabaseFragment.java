@@ -28,6 +28,7 @@ import nl.mprog.glimp.work_out.R;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
+ * Fragment of MainActivity containing a database with exercises.
  */
 
 public class DatabaseFragment extends Fragment {
@@ -55,7 +56,6 @@ public class DatabaseFragment extends Fragment {
 
     /**
      * @inheritDoc
-     *
      * Empty ListView when Fragment is destroyed.
      */
     @Override
@@ -131,7 +131,6 @@ public class DatabaseFragment extends Fragment {
                 Exercise exercise = (Exercise)
                         expandableListAdapter.getChild(groupPosition, childPosition);
 
-                // go to ExerciseActivity
                 Intent intent = new Intent(getActivity(), ExerciseActivity.class);
                 intent.putExtra("exercise", exercise);
                 startActivity(intent);

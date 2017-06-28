@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
+ * Workout class containing a name and a list of Exercise objects.
  */
 
 public class Workout implements Serializable {
@@ -26,13 +27,5 @@ public class Workout implements Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public void addExercise(Exercise exercise) {
-        exercises.add(exercise);
-    }
-
-    public void removeExercise(Exercise exercise) {
-        exercises.remove(exercise);
     }
 }

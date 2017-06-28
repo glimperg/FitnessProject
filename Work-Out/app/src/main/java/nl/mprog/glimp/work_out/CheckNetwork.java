@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 /**
  * Created by Gido Limperg on 27-6-2017.
@@ -16,35 +15,24 @@ import android.util.Log;
 
 public class CheckNetwork {
 
-    private static final String TAG = "CheckNetwork";
-
+    /**
+     * Checks whether the user is currently connected to the internet.
+     * @param context the Context in which the connection is being checked.
+     * @return true if connected to internet, else false.
+     */
     public static boolean isInternetAvailable(Context context)
     {
         ConnectivityManager service = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = service.getActiveNetworkInfo();
 
-        if (info == null)
-        {
-            Log.d(TAG,"no internet connection");
-            return false;
-        }
-        else
-        {
-            if(info.isConnected())
-            {
-                Log.d(TAG," internet connection available...");
-                return true;
-            }
-            else
-            {
-                Log.d(TAG," internet connection");
-                return true;
-            }
-
-        }
+        return info == null;
     }
 
+    /**
+     * Display AlertDialog, allowing the user to retry internet connection.
+     * @param context the Context in which the AlertDialog is being displayed.
+     */
     public static void displayAlertDialog(final Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

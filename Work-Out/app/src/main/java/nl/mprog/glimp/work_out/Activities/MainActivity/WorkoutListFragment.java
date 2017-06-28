@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,9 +30,11 @@ import nl.mprog.glimp.work_out.Workout;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
+ * Fragment of MainActivity, containing a list of created Workouts.
  */
 
 public class WorkoutListFragment extends Fragment {
+
     private static final String TAG = "WorkoutListFragment";
 
     private ListView listView;
@@ -49,18 +50,18 @@ public class WorkoutListFragment extends Fragment {
                              @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.workout_list_fragment, container, false);
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         activity = getActivity();
 
         // get reference to Firebase database containing Workouts
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("workouts");
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(userId).child("workouts");
 
         listView = (ListView) view.findViewById(R.id.workoutListView);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.workoutActionButton);
 
-        setAdapter();
-        setListener();
+        setListAdapter();
+        setListViewListener();
         setFloatingActionButton();
 
         return view;
@@ -69,9 +70,7 @@ public class WorkoutListFragment extends Fragment {
     /**
      * Adds all Workouts to workoutList and sets ListAdapter to the ListView.
      */
-    public void setAdapter() {
-
-        Log.d(TAG, "test " + WorkoutListFragment.this.isAdded());
+    public void setListAdapter() {
 
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
@@ -81,7 +80,6 @@ public class WorkoutListFragment extends Fragment {
                 Workout workout = dataSnapshot.getValue(Workout.class);
                 workoutList.add(workout);
 
-                // initialise ListAdapter and set to ListView
                 listAdapter = new WorkoutListAdapter(activity, workoutList);
                 listView.setAdapter(listAdapter);
             }
@@ -103,7 +101,10 @@ public class WorkoutListFragment extends Fragment {
         });
     }
 
-    public void setListener() {
+    /**
+     * Sets OnClickListener to ListView, moving to WorkoutActivity upon click.
+     */
+    public void setListViewListener() {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -111,6 +112,8 @@ public class WorkoutListFragment extends Fragment {
 
                 // get workout corresponding to clicked item
                 Workout workout = listAdapter.getItem(position);
+
+                // go to WorkoutActivity
                 Intent intent = new Intent(getActivity(), WorkoutActivity.class);
                 intent.putExtra("workout", workout);
                 startActivity(intent);
@@ -118,11 +121,15 @@ public class WorkoutListFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets OnClickListener to FloatingActionButton, moving to CreateWorkoutActivity upon click.
+     */
     public void setFloatingActionButton() {
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+
                 Intent intent = new Intent(getActivity(), CreateWorkoutActivity.class);
                 startActivity(intent);
             }

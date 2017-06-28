@@ -20,12 +20,11 @@ import nl.mprog.glimp.work_out.R;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
+ * MainActivity containing an Exercises, Workouts, and Planner tab.
  */
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
 
-    private FirebaseAuth mAuth;
     private ViewPager mViewPager;
 
     @Override
@@ -37,43 +36,19 @@ public class MainActivity extends AppCompatActivity {
         if (CheckNetwork.isInternetAvailable(MainActivity.this)) {
 
             // initialise Firebase authentication
-            mAuth = FirebaseAuth.getInstance();
-
-            signInAnonymously();
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.signInAnonymously();
 
             // set up ViewPager with SectionsPageAdapter
             mViewPager = (ViewPager) findViewById(R.id.container);
             setViewPager();
 
-            // set up tabs with ViewPager
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(mViewPager);
 
         } else {
             CheckNetwork.displayAlertDialog(MainActivity.this);
         }
-    }
-
-    /**
-     * Signs in device anonymously using Firebase authentication.
-     */
-    private void signInAnonymously() {
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // signed in successfully
-                            String user_id = mAuth.getCurrentUser().toString();
-                            Log.d(TAG, "signInAnonymously:success " + user_id);
-                        } else {
-                            // if sign in fails, display a message to the user
-                            Log.w(TAG, "signInAnonymously:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     /**

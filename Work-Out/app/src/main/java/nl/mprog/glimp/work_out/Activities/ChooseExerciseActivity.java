@@ -26,6 +26,11 @@ import nl.mprog.glimp.work_out.CheckNetwork;
 import nl.mprog.glimp.work_out.Exercise;
 import nl.mprog.glimp.work_out.R;
 
+/**
+ * Created by Gido Limperg on 8-6-2017.
+ * Activity for choosing an Exercise when creating a Workout.
+ */
+
 public class ChooseExerciseActivity extends AppCompatActivity {
 
     private static final String TAG = "ChooseExerciseActivity";
@@ -45,7 +50,6 @@ public class ChooseExerciseActivity extends AppCompatActivity {
 
             exerciseListView = (ExpandableListView) findViewById(R.id.chooseExerciseListView);
 
-            // set up Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.chooseExerciseToolbar);
             setSupportActionBar(toolbar);
 
@@ -59,7 +63,7 @@ public class ChooseExerciseActivity extends AppCompatActivity {
     }
 
     /**
-     * Set ListAdapter containing Exercises (obtained from Firebase) to ListView.
+     * Sets ListAdapter containing Exercises (obtained from Firebase) to ListView.
      */
     private void setListAdapter() {
 
@@ -110,7 +114,7 @@ public class ChooseExerciseActivity extends AppCompatActivity {
     }
 
     /**
-     * Set listener to ListView, choosing the Exercise upon child item click.
+     * Sets listener to ListView, choosing the Exercise upon child item click.
      */
     private void setChildClickListener() {
 
@@ -128,13 +132,14 @@ public class ChooseExerciseActivity extends AppCompatActivity {
                 intent.putExtra("exercise", exercise);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
+
                 return true;
             }
         });
     }
 
     /**
-     * Add LongClickListener to child items, sending the user to ExerciseActivity. Source used:
+     * Adds LongClickListener to child items, sending the user to ExerciseActivity. Source used:
      * https://stackoverflow.com/questions/2353074/android-long-click-on-the-child-views-of-a-expandablelistview
      */
     private void setLongClickListener() {
@@ -150,10 +155,10 @@ public class ChooseExerciseActivity extends AppCompatActivity {
                     // get Exercise corresponding to position
                     Exercise exercise = (Exercise) exerciseListAdapter.getChild(groupPosition,childPosition);
 
-                    // go to ExerciseActivity
                     Intent intent = new Intent(ChooseExerciseActivity.this, ExerciseActivity.class);
                     intent.putExtra("exercise", exercise);
                     startActivity(intent);
+
                     return true;
                 }
 

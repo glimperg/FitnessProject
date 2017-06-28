@@ -15,6 +15,7 @@ import nl.mprog.glimp.work_out.R;
 
 /**
  * Created by Gido Limperg on 15-6-2017.
+ * ArrayAdapter to be used in WorkoutActivity.
  */
 
 public class ExerciseListAdapter extends ArrayAdapter<Exercise> {

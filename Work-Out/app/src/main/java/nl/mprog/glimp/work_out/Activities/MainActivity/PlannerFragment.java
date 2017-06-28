@@ -1,6 +1,5 @@
 package nl.mprog.glimp.work_out.Activities.MainActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,25 +26,25 @@ import java.util.ArrayList;
 import nl.mprog.glimp.work_out.Activities.EditPlannerActivity;
 import nl.mprog.glimp.work_out.Activities.WorkoutActivity;
 import nl.mprog.glimp.work_out.Adapters.PlannerAdapter;
-import nl.mprog.glimp.work_out.CheckNetwork;
 import nl.mprog.glimp.work_out.R;
 import nl.mprog.glimp.work_out.Workout;
 
 /**
  * Created by Gido Limperg on 8-6-2017.
+ * Fragment of MainActivity containing a planner.
  */
 
 public class PlannerFragment extends Fragment {
 
     private static final String TAG = "PlannerFragment";
     private static final String PREFS_NAME = "plannerPrefs";
-    private static final int daysOfWeek = 7;
+    private static final int DAYS_OF_WEEK = 7;
 
     private ArrayList<Workout> plannerArrayList;
     private ListView plannerListView;
     private PlannerAdapter plannerAdapter;
     private FloatingActionButton floatingActionButton;
-    private boolean[] checkBoxState = new boolean[daysOfWeek];
+    private boolean[] checkBoxState = new boolean[DAYS_OF_WEEK];
 
     private DatabaseReference mDatabase;
 
@@ -54,24 +53,29 @@ public class PlannerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.planner_fragment, container, false);
 
-        plannerListView = (ListView) view.findViewById(R.id.plannerListView);
-        plannerArrayList = new ArrayList<>(daysOfWeek);
-        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.plannerActionButton);
-
+        // get user ID and reference to Firebase database
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference()
                 .child("users").child(userId).child("planner");
 
+        plannerListView = (ListView) view.findViewById(R.id.plannerListView);
+        plannerArrayList = new ArrayList<>(DAYS_OF_WEEK);
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.plannerActionButton);
+
         loadSharedPreferences();
 
         setDefaultPlanner();
-        setAdapter();
-        setListener();
+        setPlannerAdapter();
+        setListViewListener();
         setFloatingActionButton();
 
         return view;
     }
 
+    /**
+     * @inheritDoc
+     * Saves new CheckBox states to SharedPreferences.
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -79,25 +83,32 @@ public class PlannerFragment extends Fragment {
         SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = preferences.edit();
 
+        // get state of CheckBoxes from ListAdapter
         checkBoxState = plannerAdapter.getCheckBoxState();
 
         // save CheckBox states to SharedPreferences
-        for (int i = 0; i < daysOfWeek; i++) {
+        for (int i = 0; i < DAYS_OF_WEEK; i++) {
             editor.putBoolean("checkBoxState" + i, checkBoxState[i]);
         }
         editor.apply();
     }
 
+    /**
+     * Loads CheckBox states from SharedPreferences.
+     */
     public void loadSharedPreferences() {
 
         SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
 
-        // load CheckBox states from SharedPreferences
-        for (int i = 0; i < daysOfWeek; i++) {
+        // load CheckBox states
+        for (int i = 0; i < DAYS_OF_WEEK; i++) {
             checkBoxState[i] = preferences.getBoolean("checkBoxState" + i, false);
         }
     }
 
+    /**
+     * Creates default planner if a planner does not yet exist.
+     */
     public void setDefaultPlanner() {
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -108,8 +119,8 @@ public class PlannerFragment extends Fragment {
                 if (!dataSnapshot.exists()) {
 
                     // add default values to planner
-                    ArrayList<Workout> defaultPlanner = new ArrayList<>(daysOfWeek);
-                    for (int i = 0; i < daysOfWeek; i++) {
+                    ArrayList<Workout> defaultPlanner = new ArrayList<>(DAYS_OF_WEEK);
+                    for (int i = 0; i < DAYS_OF_WEEK; i++) {
                         defaultPlanner.add(new Workout("Rest day", null));
                     }
 
@@ -126,11 +137,16 @@ public class PlannerFragment extends Fragment {
         });
     }
 
-    public void setAdapter() {
+    /**
+     * Obtains planner from Firebase and sets ListAdapter to ListView.
+     */
+    public void setPlannerAdapter() {
 
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                // add all Workouts to ArrayList
                 Workout workout = dataSnapshot.getValue(Workout.class);
                 plannerArrayList.add(workout);
 
@@ -155,7 +171,10 @@ public class PlannerFragment extends Fragment {
         });
     }
 
-    public void setListener() {
+    /**
+     * Sets OnClickListener to ListView, moving to WorkoutActivity upon click.
+     */
+    public void setListViewListener() {
 
         plannerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -163,6 +182,8 @@ public class PlannerFragment extends Fragment {
 
                 // get workout corresponding to clicked item
                 Workout workout = plannerAdapter.getItem(position);
+
+                // check if workout is an actual Workout
                 if (workout.getExercises().size() > 0) {
 
                     Intent intent = new Intent(getActivity(), WorkoutActivity.class);
@@ -173,6 +194,9 @@ public class PlannerFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets OnClickListener to FloatingActionButton, moving to EditPlannerActivity upon click.
+     */
     public void setFloatingActionButton() {
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
