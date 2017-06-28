@@ -54,6 +54,8 @@ public class DatabaseFragment extends Fragment {
     }
 
     /**
+     * @inheritDoc
+     *
      * Empty ListView when Fragment is destroyed.
      */
     @Override
