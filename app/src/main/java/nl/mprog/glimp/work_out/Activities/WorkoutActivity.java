@@ -33,7 +33,6 @@ import nl.mprog.glimp.work_out.Activities.MainActivity.MainActivity;
 import nl.mprog.glimp.work_out.R;
 import nl.mprog.glimp.work_out.Workout;
 
-// TODO: ergens plaatjes toevoegen in ListView die de categorie aangeven
 
 public class WorkoutActivity extends AppCompatActivity {
     private static final String TAG = "WorkoutActivity";
@@ -52,7 +51,7 @@ public class WorkoutActivity extends AppCompatActivity {
             workout = (Workout) getIntent().getSerializableExtra("workout");
             exerciseList = workout.getExercises();
 
-            // initialise Toolbar
+            // set up Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.workoutToolbar);
             toolbar.setTitle(workout.getName());
             setSupportActionBar(toolbar);
@@ -69,6 +68,7 @@ public class WorkoutActivity extends AppCompatActivity {
             equipmentView.setText(equipmentString);
 
             setListener();
+
         } else {
             CheckNetwork.displayAlertDialog(WorkoutActivity.this);
         }
@@ -76,6 +76,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_workout, menu);
         return true;
@@ -182,7 +183,6 @@ public class WorkoutActivity extends AppCompatActivity {
      * @return String with required equipment for the workout.
      */
     private String getEquipment() {
-
         // ArrayList with all equipment for the workout
         ArrayList<String> equipmentList = new ArrayList<>();
 

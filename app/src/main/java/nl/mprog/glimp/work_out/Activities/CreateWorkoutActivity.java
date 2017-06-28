@@ -69,17 +69,23 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
+            // check whether or not the user is editing a workout
             Intent intent = getIntent();
             editWorkout = intent.getBooleanExtra("editWorkout", false);
 
-            // initialise Toolbar
+            // set up Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.createWorkoutToolbar);
             setSupportActionBar(toolbar);
             workoutEditText = (EditText) findViewById(R.id.workoutTitleEditText);
 
             if (editWorkout) {
+
                 toolbar.setTitle("Edit workout");
+
+                // get Workout to be edited
                 Workout workout = (Workout) intent.getSerializableExtra("workout");
+
+                // set old Workout properties to layout
                 exerciseList = workout.getExercises();
                 oldWorkoutTitle = workout.getName();
                 workoutEditText.setText(oldWorkoutTitle);
@@ -90,15 +96,32 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             exerciseListAdapter = new ExerciseListAdapter(CreateWorkoutActivity.this, exerciseList);
             exerciseListView.setAdapter(exerciseListAdapter);
 
-            setSpinner();
+            setTemplateSpinner();
             setTemplateListener();
+
             setSeekBarListener();
             setListViewListener();
+
         } else {
             CheckNetwork.displayAlertDialog(CreateWorkoutActivity.this);
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_complete, menu);
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * Saves Workout when button is clicked (if the Workout is valid).
+     * @param item: the clicked MenuItem.
+     * @return a boolean (true or false).
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -109,10 +132,56 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             // check if title only contains numbers and letters
             boolean validTitle = workoutTitle.matches("[a-zA-Z0-9]+");
 
+            // if title is valid and Exercises have been added
             if (exerciseList.size() > 0 && validTitle) {
 
-                mDatabase.child("users").child(userId).child("workouts").child(workoutTitle)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                checkTitle(workoutTitle);
+                return true;
+
+            } else if (exerciseList.size() == 0) {
+                Toast.makeText(CreateWorkoutActivity.this, "Please select at least one exercise",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+
+            } else {
+                Toast.makeText(CreateWorkoutActivity.this, "Please enter a valid title",
+                        Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * Gets Exercise from ChooseExerciseActivity and adds Exercise to list.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == CHOOSE_EXERCISE_RESULT) {
+            if (resultCode == RESULT_OK) {
+
+                // get exercise and add to list
+                Exercise exercise = (Exercise) data.getSerializableExtra("exercise");
+                exerciseList.add(exercise);
+                exerciseListAdapter.notifyDataSetChanged();
+            } else {
+                Log.d(TAG, "choosing exercise failed");
+            }
+        }
+    }
+
+    /**
+     * Check if Workout can be saved and if so, save the Workout.
+     * @param workoutTitle: title of the Workout
+     */
+    public void checkTitle(final String workoutTitle) {
+
+        mDatabase.child("users").child(userId).child("workouts").child(workoutTitle)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -132,47 +201,12 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
                 });
-                return true;
-
-            } else if (exerciseList.size() == 0) {
-                Toast.makeText(CreateWorkoutActivity.this, "Please select at least one exercise",
-                        Toast.LENGTH_SHORT).show();
-                return true;
-
-            } else {
-                Toast.makeText(CreateWorkoutActivity.this, "Please enter a valid title",
-                        Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_complete, menu);
-        return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == CHOOSE_EXERCISE_RESULT) {
-            if (resultCode == RESULT_OK) {
-
-                // get exercise and add to list
-                Exercise exercise = (Exercise) data.getSerializableExtra("exercise");
-                exerciseList.add(exercise);
-                exerciseListAdapter.notifyDataSetChanged();
-            } else {
-                Log.d(TAG, "choosing exercise failed");
-            }
-        }
-    }
-
+    /**
+     * Saves Workout to Firebase database and returns to MainActivity.
+     * @param title: the name of the Workout to be saved.
+     */
     public void saveWorkout(String title) {
 
         if (editWorkout) {
@@ -180,7 +214,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             mDatabase.child("users").child(userId).child("workouts").child(oldWorkoutTitle).removeValue();
         }
 
-        // save workout to database
+        // save workout to Firebase database
         Workout workout = new Workout(title, exerciseList);
         mDatabase.child("users").child(userId).child("workouts").child(title).setValue(workout);
 
@@ -190,7 +224,10 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         finish();
     }
 
-    private void setSpinner() {
+    /**
+     * Sets ArrayAdapter to templateSpinner.
+     */
+    public void setTemplateSpinner() {
 
         templateSpinner = (Spinner) findViewById(R.id.templateSpinner);
 
@@ -203,31 +240,9 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         templateSpinner.setAdapter(adapter);
     }
 
-    private void setSeekBarListener() {
-
-        SeekBar lengthSeekBar = (SeekBar) findViewById(R.id.lengthSeekBar);
-        lengthTextView = (TextView) findViewById(R.id.lengthNumberTextView);
-
-        lengthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                length = progress + 1;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // set length of SeekBar to TextView
-                String lengthString = length + "/" + (seekBar.getMax()+1);
-                lengthTextView.setText(lengthString);
-                getTemplate();
-            }
-        });
-    }
-
+    /**
+     * Set listener to templateSpinner, obtaining a new template upon item selection.
+     */
     public void setTemplateListener() {
 
         templateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -246,12 +261,45 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets listener to SeekBar, obtaining the length upon change.
+     */
+    public void setSeekBarListener() {
+
+        // initialise SeekBar
+        SeekBar lengthSeekBar = (SeekBar) findViewById(R.id.lengthSeekBar);
+        lengthTextView = (TextView) findViewById(R.id.lengthNumberTextView);
+
+        lengthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // set new length of SeekBar
+                length = progress + 1;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // set length of SeekBar to TextView
+                String lengthString = length + "/" + (seekBar.getMax()+1);
+                lengthTextView.setText(lengthString);
+
+                getTemplate();
+            }
+        });
+    }
+
+    /**
+     * Get template workout from Firebase and add exercises from template to list.
+     */
     public void getTemplate() {
 
         mDatabase.child("templates").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                 // find workout corresponding to template
                 if (dataSnapshot.getKey().equals(template)) {
 
@@ -261,6 +309,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                     ArrayList<Exercise> newExercises = templateWorkout.getExercises();
                     exerciseList.clear();
 
+                    // modify exerciseList into list with correct length
                     exerciseList.addAll(newExercises.subList(0,length));
                     exerciseListAdapter.notifyDataSetChanged();
                 }
@@ -283,13 +332,16 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Set LongClickListener to ListView, removing Exercise upon long click.
+     */
     public void setListViewListener() {
 
         exerciseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                // remove exercise upon long click
+                // remove Exercise
                 Exercise exercise = exerciseListAdapter.getItem(position);
                 exerciseList.remove(exercise);
                 exerciseListAdapter.notifyDataSetChanged();
@@ -298,6 +350,10 @@ public class CreateWorkoutActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Go to ChooseExerciseActivity when FloatingActionButton is clicked.
+     * @param view: View corresponding to the clicked button.
+     */
     public void newExercise(View view) {
 
         Intent intent = new Intent(CreateWorkoutActivity.this, ChooseExerciseActivity.class);

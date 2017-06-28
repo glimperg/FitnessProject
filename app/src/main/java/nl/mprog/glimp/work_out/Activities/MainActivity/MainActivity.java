@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private FirebaseAuth mAuth;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +42,13 @@ public class MainActivity extends AppCompatActivity {
             signInAnonymously();
 
             // set up ViewPager with SectionsPageAdapter
-            ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
-            setViewPager(mViewPager);
+            mViewPager = (ViewPager) findViewById(R.id.container);
+            setViewPager();
 
             // set up tabs with ViewPager
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(mViewPager);
+
         } else {
             CheckNetwork.displayAlertDialog(MainActivity.this);
         }
@@ -77,13 +79,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Sets adapter containing Fragments to the ViewPager.
      */
-    private void setViewPager(ViewPager viewPager){
+    private void setViewPager(){
 
+        // initialise SectionsPageAdapter and add Fragments
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new DatabaseFragment(), "Exercises");
         adapter.addFragment(new WorkoutListFragment(), "Workouts");
         adapter.addFragment(new PlannerFragment(), "Planner");
 
-        viewPager.setAdapter(adapter);
+        mViewPager.setAdapter(adapter);
     }
 }

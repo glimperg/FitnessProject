@@ -1,6 +1,5 @@
 package nl.mprog.glimp.work_out.Activities.MainActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,7 +23,6 @@ import java.util.List;
 
 import nl.mprog.glimp.work_out.Activities.ExerciseActivity;
 import nl.mprog.glimp.work_out.Adapters.CustomExpandableListAdapter;
-import nl.mprog.glimp.work_out.CheckNetwork;
 import nl.mprog.glimp.work_out.Exercise;
 import nl.mprog.glimp.work_out.R;
 
@@ -40,12 +38,7 @@ public class DatabaseFragment extends Fragment {
     private ExpandableListAdapter expandableListAdapter;
     private List<String> categoriesList = new ArrayList<>();
     private HashMap<String, List<Exercise>> childItemsList = new HashMap<>();
-    private DatabaseReference mDatabase;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
@@ -53,15 +46,16 @@ public class DatabaseFragment extends Fragment {
                              @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.database_fragment, container, false);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("exercises");
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
 
-        setAdapter();
-        setListener();
-
+        setListAdapter();
+        setChildClickListener();
         return view;
     }
 
+    /**
+     * Empty ListView when Fragment is destroyed.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -70,30 +64,35 @@ public class DatabaseFragment extends Fragment {
         childItemsList = new HashMap<>();
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
+    /**
+     * Set ListAdapter containing Exercises (obtained from Firebase) to ListView.
+     */
+    private void setListAdapter() {
 
-    private void setAdapter() {
+        // get reference to Firebase database
+        DatabaseReference mDatabase = FirebaseDatabase
+                .getInstance().getReference().child("exercises");
 
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+                // ArrayList containing all Exercises from a particular category
                 ArrayList<Exercise> exerciseList = new ArrayList<>();
 
+                // add every exercise in category to exerciseList
                 for (DataSnapshot exerciseSnapshot : dataSnapshot.getChildren()) {
 
-                    // add every exercise in category to ArrayList
                     Exercise exercise = exerciseSnapshot.getValue(Exercise.class);
                     exerciseList.add(exercise);
                 }
 
+                // add exerciseList to main list
                 String category = dataSnapshot.getKey();
                 categoriesList.add(category);
                 childItemsList.put(category, exerciseList);
 
+                // set ListAdapter to ListView
                 expandableListAdapter = new CustomExpandableListAdapter(
                         getActivity(), categoriesList, childItemsList);
                 expandableListView.setAdapter(expandableListAdapter);
@@ -116,14 +115,21 @@ public class DatabaseFragment extends Fragment {
         });
     }
 
-    private void setListener() {
+    /**
+     * Set listener to ListView, sending the user to ExerciseActivity upon child item click.
+     */
+    private void setChildClickListener() {
+
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent,
-                                        View v, int groupPosition, int childPosition, long id) {
+                                        View view, int groupPosition, int childPosition, long id) {
 
+                // get Exercise corresponding to position
                 Exercise exercise = (Exercise)
                         expandableListAdapter.getChild(groupPosition, childPosition);
+
+                // go to ExerciseActivity
                 Intent intent = new Intent(getActivity(), ExerciseActivity.class);
                 intent.putExtra("exercise", exercise);
                 startActivity(intent);
