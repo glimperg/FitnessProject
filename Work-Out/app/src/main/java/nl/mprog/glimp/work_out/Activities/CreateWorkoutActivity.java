@@ -137,7 +137,7 @@ public class CreateWorkoutActivity extends AppCompatActivity {
             final String workoutTitle = workoutEditText.getText().toString();
 
             // check if title only contains numbers and letters
-            boolean validTitle = workoutTitle.matches("[a-zA-Z0-9]+");
+            boolean validTitle = workoutTitle.matches("[a-zA-Z0-9 ]+");
 
             // if title is valid and Exercises have been added
             if (exerciseList.size() > 0 && validTitle) {
@@ -398,6 +398,9 @@ public class CreateWorkoutActivity extends AppCompatActivity {
                 Exercise exercise = exerciseListAdapter.getItem(position);
                 exerciseList.remove(exercise);
                 exerciseListAdapter.notifyDataSetChanged();
+
+                Toast.makeText(CreateWorkoutActivity.this, "Removed exercise",
+                        Toast.LENGTH_SHORT).show();
                 return true;
             }
         });

@@ -143,3 +143,12 @@ Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude work
 * Verder het aanpassen van workouts veranderd. De oude workout moet namelijk verwijderd worden, iets wat eerst niet gebeurde.
 * Aantal kleine bugfixes.
 * Veel code opgeschoond.
+
+## Dag 3, 28-6-17
+
+* Opnieuw veel bugs gefixt. Ten eerste crashte de app soms bij het laden van de lijst met workouts. Dit kwam doordat het laden van de Fragments asynchroon gebeurt met het laden van de lijst met workouts, dus soms was de Fragment nog niet geïnitialiseerd.
+* Verder werkte het maken van een eerste planner niet met een ChildEventListener, maar wel met een ValueEventListener (terwijl dit hetzelfde zou moeten doen).
+* Daarnaast kon je in de MainActivity door op de terug-knop te drukken teruggaan naar een eerdere state van de MainActivity. Als je bijvoorbeeld een workout verwijderde en daarna op terug drukte, verscheen de workout weer in de lijst. Dit is opgelost door na het verwijderen van een workout alle vorige activities af te sluiten.
+* Na het verwijderen van een workout crashte de app telkens. Dit is opnieuw opgelost door een ValueEventListener i.p.v. een ChildEventListener te gebruiken.
+* Problemen met Gradle opgelost en nog een probleem met Firebase Authentication, waardoor de app op andere toestellen meteen crashte bij het opstarten. Dit laatste kwam doordat de user id werd opgevraagd voordat de nieuwe user was aangemaakt. De oorzaak van de problemen met Gradle is mij nog steeds onduidelijk.
+* Heel veel code opgeschoond. In elke activity comments en javadocs geplaatst.

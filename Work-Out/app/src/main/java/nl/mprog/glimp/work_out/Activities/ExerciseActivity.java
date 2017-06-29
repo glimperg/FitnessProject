@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import nl.mprog.glimp.work_out.CheckNetwork;
 import nl.mprog.glimp.work_out.Exercise;
 import nl.mprog.glimp.work_out.ImageAsyncTask;
 import nl.mprog.glimp.work_out.R;
@@ -23,9 +24,15 @@ public class ExerciseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
 
-        // get Exercise from intent
-        exercise = (Exercise) getIntent().getSerializableExtra("exercise");
-        setViews();
+        // check internet connection
+        if (CheckNetwork.isInternetAvailable(ExerciseActivity.this)) {
+            // get Exercise from intent
+            exercise = (Exercise) getIntent().getSerializableExtra("exercise");
+            setViews();
+
+        } else {
+            CheckNetwork.displayAlertDialog(ExerciseActivity.this);
+        }
     }
 
     /**
