@@ -25,29 +25,29 @@ Bij deze app is gebruik gemaakt van Firebase authenticatie en de Firebase databa
 In deze sectie komen alle gemaakte Java classes aan bod. Verder wordt uitgelegd waar de classes belangrijk voor zijn en hoe ze aan elkaar verwant zijn.
 Ten eerste worden de volgende classes gebruikt: Exercise, Workout, CheckNetwork en ImageAsyncTask.
 
-* Exercise: een Object die alle informatie over een oefening bevat: naam, beschrijving, categorie, spieren, benodigdheden en een afbeelding.
-* Workout: een Object die een titel bevat en een lijst met oefeningen.
-* CheckNetwork: een class die een functie bevat waarmee de internetverbinding gecontroleerd kan worden. Verder heeft deze class een functie die een AlertDialog laat zien als er geen internetverbinding is.
-* ImageAsyncTask: een AsyncTask die een afbeelding vanaf een URL in een Activity laadt.
+* **Exercise:** een Object die alle informatie over een oefening bevat: naam, beschrijving, categorie, spieren, benodigdheden en een afbeelding.
+* **Workout:** een Object die een titel bevat en een lijst met oefeningen.
+* **CheckNetwork:** een class die een functie bevat waarmee de internetverbinding gecontroleerd kan worden. Verder heeft deze class een functie die een AlertDialog laat zien als er geen internetverbinding is.
+* **ImageAsyncTask:** een AsyncTask die een afbeelding vanaf een URL in een Activity laadt.
 
 De eerste drie classes worden in veel verschillende Activities gebruikt. Zo wordt bijvoorbeeld in elke Activity de internetverbinding gecontroleerd. De ImageAsyncTask wordt alleen gebruikt bij het laden van de afbeelding van een oefening.
 
 Verder bestaat de app uit de volgende Activities: MainActivity, ExerciseActivity, WorkoutActivity, CreateWorkoutActivity, ChooseExerciseActivity, en EditPlannerActivity.
 
-* MainActivity: verschijnt bij het opstarten. Eerst wordt door middel van Firebase authenticatie een (anoniem) account aangemaakt. Vervolgens worden de tabbladen (Fragments) geladen door middel van een ViewPager. De MainActivity bevat de volgende Fragments:
+* **MainActivity:** verschijnt bij het opstarten. Eerst wordt door middel van Firebase authenticatie een (anoniem) account aangemaakt. Vervolgens worden de tabbladen (Fragments) geladen door middel van een ViewPager. De MainActivity bevat de volgende Fragments:
 
-  * DatabaseFragment: bevat een lijst met alle oefeningen. Er is gekozen voor een ExpandableListView, zodat de oefeningen per spiergroep gecategoriseerd zijn. Deze oefeningen worden d.m.v. een ChildEventListener opgehaald uit Firebase. De ListView bevat ook een onChildClickListener die de gebruiker naar de ExerciseActivity van de betreffende oefening stuurt.
+  * **DatabaseFragment:** bevat een lijst met alle oefeningen. Er is gekozen voor een ExpandableListView, zodat de oefeningen per spiergroep gecategoriseerd zijn. Deze oefeningen worden d.m.v. een ChildEventListener opgehaald uit Firebase. De ListView bevat ook een onChildClickListener die de gebruiker naar de ExerciseActivity van de betreffende oefening stuurt.
 
-  * WorkoutListFragment: bevat een lijst met alle workouts. Deze workouts worden d.m.v. een ChildEventListener opgehaald uit Firebase. Verder heeft de ListView een onItemClickListener die de gebruiker naar de WorkoutActivity van de betreffende workout stuurt. Tot slot is er een FloatingActionButton om naar de CreateWorkoutActivity te gaan.
+  * **WorkoutListFragment:** bevat een lijst met alle workouts. Deze workouts worden d.m.v. een ChildEventListener opgehaald uit Firebase. Verder heeft de ListView een onItemClickListener die de gebruiker naar de WorkoutActivity van de betreffende workout stuurt. Tot slot is er een FloatingActionButton om naar de CreateWorkoutActivity te gaan.
 
-  * PlannerFragment: bevat een lijst met de weekplanner. Als er nog geen planner aangemaakt is, wordt er eerst een standaard planner in Firebase gezet d.m.v. de functie setDefaultPlanner. Verder worden opnieuw de workouts met een ChildEventListener uit Firebase opgehaald en is er een onItemClickListener om naar de workout te gaan. Met behulp van CheckBoxes kunnen de workouts in de planner worden opgeslagen. Deze CheckBoxes worden opgeslagen via SharedPreferences. De states van de CheckBoxes worden in de onCreate opgehaald en in de onStop weer opgeslagen. Tot slot is er een FloatingActionButton om naar EditPlannerActivity te gaan en de planner aan te passen.
+  * **PlannerFragment:** bevat een lijst met de weekplanner. Als er nog geen planner aangemaakt is, wordt er eerst een standaard planner in Firebase gezet d.m.v. de functie setDefaultPlanner. Verder worden opnieuw de workouts met een ChildEventListener uit Firebase opgehaald en is er een onItemClickListener om naar de workout te gaan. Met behulp van CheckBoxes kunnen de workouts in de planner worden opgeslagen. Deze CheckBoxes worden opgeslagen via SharedPreferences. De states van de CheckBoxes worden in de onCreate opgehaald en in de onStop weer opgeslagen. Tot slot is er een FloatingActionButton om naar EditPlannerActivity te gaan en de planner aan te passen.
 
-* ExerciseActivity: Activity die alle informatie van een oefening weergeeft. Uit een Intent wordt een Exercise object gehaald, waarna d.m.v. de functie setViews alle TextViews en de ImageView wordt geïnitialiseerd.
+* **ExerciseActivity:** Activity die alle informatie van een oefening weergeeft. Uit een Intent wordt een Exercise object gehaald, waarna d.m.v. de functie setViews alle TextViews en de ImageView wordt geïnitialiseerd.
 
-* WorkoutActivity: bevat informatie over een workout. Via de functie getEquipment worden alle benodigdheden van een workout opgehaald, waarna deze in een TextView geplaatst worden.
+* **WorkoutActivity:** bevat informatie over een workout. Via de functie getEquipment worden alle benodigdheden van een workout opgehaald, waarna deze in een TextView geplaatst worden.
 Door te klikken op een oefening, ga je naar de betreffende ExerciseActivity. Verder staan in de Toolbar knoppen waarmee de workout aangepast of verwijderd kan worden. Door op 'aanpassen' te klikken, wordt de gebruiker naar CreateWorkoutActivity gestuurd. Als de gebruiker op het verwijder-icoon klikt, verschijnt er een AlertDialog, waarna de keuze om te verwijderen kan worden bevestigd en de workout uit Firebase wordt verwijderd. Vervolgens wordt gecontroleerd of de workout ergens in de planner staat. Als dit zo is, moet de workout ook uit de planner worden verwijderd.
 
-* CreateWorkoutActivity: Activity waarin een nieuwe workout kan worden aangemaakt. Ook is dit de Activity waarin bestaande workouts worden aangepast. In een ListView staat de lijst met geselecteerde oefeningen. Door middel van een LongClickListener kunnen deze oefeningen weer verwijderd worden. Met behulp van een Spinner kan de template worden gekozen, en met behulp van een SeekBar kan de lengte van deze template worden gekozen. Deze Views worden geïnitialiseerd in resp. setTemplateSpinner en setSeekBarListener. Als er een nieuwe template of lengte wordt gekozen, wordt de nieuwe template via de functie getTemplate uit Firebase opgehaald.
+* **CreateWorkoutActivity:** Activity waarin een nieuwe workout kan worden aangemaakt. Ook is dit de Activity waarin bestaande workouts worden aangepast. In een ListView staat de lijst met geselecteerde oefeningen. Door middel van een LongClickListener kunnen deze oefeningen weer verwijderd worden. Met behulp van een Spinner kan de template worden gekozen, en met behulp van een SeekBar kan de lengte van deze template worden gekozen. Deze Views worden geïnitialiseerd in resp. setTemplateSpinner en setSeekBarListener. Als er een nieuwe template of lengte wordt gekozen, wordt de nieuwe template via de functie getTemplate uit Firebase opgehaald.
 
   Verder is er een FloatingActionButton, welke de functie startActivityForResult aanroept om naar ChooseExerciseActivity te gaan. In de functie onActivityResult wordt vervolgens de nieuwe oefening toegevoegd aan de lijst met oefeningen.
 
@@ -55,18 +55,18 @@ Door te klikken op een oefening, ga je naar de betreffende ExerciseActivity. Ver
 
   Als de gebruiker een bestaande workout aan het aanpassen is, worden eerst alle oude gegevens opgeslagen. Bij het opslaan van de workout wordt dan eerst de oude workout uit Firebase verwijderd. Verder wordt weer gecheckt of de workout ergens in de weekplanner is ingepland. Als dit zo is, moet deze workout namelijk ook aangepast worden.
 
-* ChooseExerciseActivity: in deze Activity wordt een oefening gekozen bij het aanmaken van een workout. De gebruiker kan kiezen uit een lijst die opnieuw met een ExpandableListView is gemaakt. Door te klikken op een oefening wordt deze gekozen. Verder wordt er m.b.v. een LongClickListener door lang te klikken naar de ExerciseActivity van de oefening gegaan.
+* **ChooseExerciseActivity:** in deze Activity wordt een oefening gekozen bij het aanmaken van een workout. De gebruiker kan kiezen uit een lijst die opnieuw met een ExpandableListView is gemaakt. Door te klikken op een oefening wordt deze gekozen. Verder wordt er m.b.v. een LongClickListener door lang te klikken naar de ExerciseActivity van de oefening gegaan.
 
-* EditPlannerActivity: Activity waarin de weekplanner kan worden aangepast. De gebruiker ziet een weekplanner en kan door op een dag te klikken de activiteit aanpassen. Deze activiteit wordt gekozen m.b.v. een AlertDialog. Eerst worden de standaardactiviteiten toegevoegd aan een lijst: Rest day, Cycling en Running. Verder worden d.m.v. de functie getWorkouts de workouts uit Firebase opgehaald en aan dezelfde lijst toegevoegd. Vervolgens wordt deze lijst toegevoegd aan de AlertDialog. Door op de knop in de Toolbar te drukken, wordt de planner opgeslagen in Firebase.
+* **EditPlannerActivity:** Activity waarin de weekplanner kan worden aangepast. De gebruiker ziet een weekplanner en kan door op een dag te klikken de activiteit aanpassen. Deze activiteit wordt gekozen m.b.v. een AlertDialog. Eerst worden de standaardactiviteiten toegevoegd aan een lijst: Rest day, Cycling en Running. Verder worden d.m.v. de functie getWorkouts de workouts uit Firebase opgehaald en aan dezelfde lijst toegevoegd. Vervolgens wordt deze lijst toegevoegd aan de AlertDialog. Door op de knop in de Toolbar te drukken, wordt de planner opgeslagen in Firebase.
 
 Bij de app zijn de volgende Adapters gebruikt:
 
-* CustomExpandableListAdapter: ExpandableListAdapter gebruikt in DatabaseFragment en ChooseExerciseActivity.
-* SectionsPagerAdapter: FragmentPagerAdapter gebruikt in MainActivity voor het weergeven van de tabbladen.
-* EditPlannerAdapter: ArrayAdapter gebruikt in EditPlannerActivity.
-* ExerciseListAdapter: ArrayAdapter gebruikt in WorkoutActivity.
-* PlannerAdapter: ArrayAdapter gebruikt in PlannerFragment.
-* WorkoutListAdapter: ArrayAdapter gebruikt in WorkoutListFragment.
+* **CustomExpandableListAdapter:** ExpandableListAdapter gebruikt in DatabaseFragment en ChooseExerciseActivity.
+* **SectionsPagerAdapter:** FragmentPagerAdapter gebruikt in MainActivity voor het weergeven van de tabbladen.
+* **EditPlannerAdapter:** ArrayAdapter gebruikt in EditPlannerActivity.
+* **ExerciseListAdapter:** ArrayAdapter gebruikt in WorkoutActivity.
+* **PlannerAdapter:** ArrayAdapter gebruikt in PlannerFragment.
+* **WorkoutListAdapter:** ArrayAdapter gebruikt in WorkoutListFragment.
 
 ## Problemen
 
