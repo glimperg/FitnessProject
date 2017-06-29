@@ -1,4 +1,11 @@
 # Work Out
+
+![](doc/oefening.png)
+
+![](doc/workout.png)
+
+![](doc/planner.png)
+
 *Gido Limperg, 11060727*
 
 ## Probleem

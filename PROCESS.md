@@ -152,3 +152,9 @@ Er kunnen echter geen twee workouts dezelfde naam hebben; dan wordt de oude work
 * Na het verwijderen van een workout crashte de app telkens. Dit is opnieuw opgelost door een ValueEventListener i.p.v. een ChildEventListener te gebruiken.
 * Problemen met Gradle opgelost en nog een probleem met Firebase Authentication, waardoor de app op andere toestellen meteen crashte bij het opstarten. Dit laatste kwam doordat de user id werd opgevraagd voordat de nieuwe user was aangemaakt. De oorzaak van de problemen met Gradle is mij nog steeds onduidelijk.
 * Heel veel code opgeschoond. In elke activity comments en javadocs geplaatst.
+
+## Dag 4, 29-6-17
+
+* De internetverbinding wordt nu ook gecontroleerd in ExerciseActivity.
+* Ervoor gezorgd dat spaties in de titels van workouts ook zijn toegestaan.
+* REPORT.md geschreven en de laatste paar aanpassingen aan het project gemaakt.

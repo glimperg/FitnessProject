@@ -16,8 +16,6 @@ public class Exercise implements Serializable {
     private String equipment;
     private String muscles;
     private ArrayList<String> images;
-    private int sets;
-    private int reps;
 
     // constructor for Firebase
     public Exercise() {

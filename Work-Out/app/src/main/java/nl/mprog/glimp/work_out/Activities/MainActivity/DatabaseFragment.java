@@ -40,7 +40,6 @@ public class DatabaseFragment extends Fragment {
     private List<String> categoriesList = new ArrayList<>();
     private HashMap<String, List<Exercise>> childItemsList = new HashMap<>();
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,

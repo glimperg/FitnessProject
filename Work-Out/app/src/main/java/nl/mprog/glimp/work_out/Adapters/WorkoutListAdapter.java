@@ -15,7 +15,7 @@ import nl.mprog.glimp.work_out.Workout;
 
 /**
  * Created by Gido Limperg on 13-6-2017.
- * ArrayAdapter to be used in WorkoutListFragment
+ * ArrayAdapter to be used in WorkoutListFragment.
  */
 
 public class WorkoutListAdapter extends ArrayAdapter<Workout> {

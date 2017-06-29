@@ -170,13 +170,12 @@ public class WorkoutActivity extends AppCompatActivity {
         // remove Workout from list of Workouts
         mDatabase.child("workouts").child(name).removeValue();
 
+        // check if planner contains Workout
         mDatabase.child("planner").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                // check if planner contains Workout
                 if (dataSnapshot.child("name").getValue().equals(name)) {
-
                     // change Workout to default Workout
                     Workout restDay = new Workout("Rest day", null);
                     mDatabase.child("planner").child(dataSnapshot.getKey()).setValue(restDay);
